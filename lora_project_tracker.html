@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LoRa IoT Project Tracker</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-secondary: #f8fafc;
+    --bg-tertiary: #f1f5f9;
+    --text: #111827;
+    --text-secondary: #6b7280;
+    --text-tertiary: #9ca3af;
+    --border: rgba(0,0,0,0.12);
+    --border-md: rgba(0,0,0,0.2);
+    --accent: #2563eb;
+    --green: #16a34a;
+    --green-bg: #dcfce7;
+    --green-text: #14532d;
+    --blue-bg: #dbeafe;
+    --blue-text: #1e3a8a;
+    --purple: #7c3aed;
+    --purple-bg: #ede9fe;
+    --purple-text: #3b0764;
+    --orange: #ea580c;
+    --red: #dc2626;
+    --info-bg: #dbeafe;
+    --info-text: #1e3a8a;
+    --success-bg: #dcfce7;
+    --success-text: #14532d;
+    --warn-bg: #fef3c7;
+    --warn-text: #78350f;
+    --radius: 8px;
+    --radius-lg: 12px;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a1a;
+      --bg-secondary: #242424;
+      --bg-tertiary: #2e2e2e;
+      --text: #f0f0f0;
+      --text-secondary: #a0a0a0;
+      --text-tertiary: #6b6b6b;
+      --border: rgba(255,255,255,0.1);
+      --border-md: rgba(255,255,255,0.2);
+      --green-bg: #052e16;
+      --green-text: #86efac;
+      --blue-bg: #0f172a;
+      --blue-text: #93c5fd;
+      --purple-bg: #1e1b4b;
+      --purple-text: #c4b5fd;
+      --info-bg: #0f172a;
+      --info-text: #93c5fd;
+      --success-bg: #052e16;
+      --success-text: #86efac;
+      --warn-bg: #1c1007;
+      --warn-text: #fcd34d;
+    }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg-tertiary);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 1.5rem;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    background: var(--bg);
+    border-radius: var(--radius-lg);
+    border: 0.5px solid var(--border);
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+  }
+
+  /* HEADER */
+  .header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    background: var(--bg);
+  }
+
+  .title-block { display: flex; flex-direction: column; gap: 4px; }
+  .title-main { font-size: 17px; font-weight: 500; color: var(--text); }
+  .title-sub { font-size: 12px; color: var(--text-secondary); }
+
+  .header-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+  .btn {
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: var(--radius);
+    border: 0.5px solid var(--border-md);
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all .15s;
+    font-family: var(--font);
+  }
+  .btn:hover { background: var(--bg-secondary); color: var(--text); }
+  .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn.primary:hover { opacity: .9; }
+
+  /* STATS */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 8px;
+    padding: 1rem 1.5rem;
+    background: var(--bg-secondary);
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .stat {
+    background: var(--bg);
+    border-radius: var(--radius);
+    padding: .65rem .85rem;
+    border: 0.5px solid var(--border);
+  }
+  .stat-label { font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; }
+  .stat-value { font-size: 20px; font-weight: 500; line-height: 1.2; }
+  .stat-sub { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+
+  .progress-bar {
+    height: 5px;
+    background: var(--bg-tertiary);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 6px;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width .6s cubic-bezier(.4,0,.2,1);
+  }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    border-bottom: 0.5px solid var(--border);
+    padding: 0 1.5rem;
+    background: var(--bg);
+    overflow-x: auto;
+    gap: 0;
+  }
+  .tab {
+    padding: .65rem 1rem;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all .15s;
+    font-family: var(--font);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tab:hover:not(.active) { color: var(--text); }
+  .tab.active { color: var(--text); border-bottom-color: var(--accent); }
+
+  /* CONTENT */
+  .content { padding: 1rem 1.5rem 2rem; }
+
+  /* FILTER ROW */
+  .filter-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .filter-btn {
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 0.5px solid var(--border-md);
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all .15s;
+    font-family: var(--font);
+  }
+  .filter-btn:hover { color: var(--text); }
+  .filter-btn.active {
+    background: var(--text);
+    color: var(--bg);
+    border-color: transparent;
+  }
+  .filter-btn.phase-btn { border-radius: var(--radius); }
+
+  .spacer { flex: 1; }
+
+  /* WEEK SECTION */
+  .week-section { margin-bottom: 1.25rem; }
+
+  .week-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .5rem .85rem;
+    border-radius: var(--radius);
+    margin-bottom: .5rem;
+    cursor: default;
+  }
+  .week-title { font-size: 13px; font-weight: 500; }
+  .week-meta { font-size: 12px; }
+
+  /* TASKS */
+  .task-list { display: flex; flex-direction: column; gap: 4px; }
+
+  .task {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: .65rem .85rem;
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+    position: relative;
+  }
+  .task:hover { border-color: var(--border-md); background: var(--bg-secondary); }
+  .task.done { opacity: .6; }
+  .task.done .task-text { text-decoration: line-through; color: var(--text-secondary); }
+  .task.in-progress { border-left: 2px solid var(--accent); }
+
+  .check {
+    width: 19px;
+    height: 19px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-md);
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .15s;
+    font-size: 11px;
+  }
+  .check.checked { background: var(--green); border-color: var(--green); color: #fff; }
+  .check.in-prog { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  .task-body { flex: 1; min-width: 0; }
+  .task-text { font-size: 13px; line-height: 1.55; }
+
+  .task-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 5px;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .badge-green { background: var(--success-bg); color: var(--success-text); }
+  .badge-blue { background: var(--info-bg); color: var(--info-text); }
+  .badge-orange { background: var(--warn-bg); color: var(--warn-text); }
+  .badge-purple { background: var(--purple-bg); color: var(--purple-text); }
+  .badge-gray { background: var(--bg-secondary); color: var(--text-secondary); border: 0.5px solid var(--border); }
+
+  .day-info { font-size: 11px; color: var(--text-tertiary); display: flex; align-items: center; gap: 3px; }
+
+  .chevron {
+    font-size: 14px;
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: transform .2s;
+  }
+  .task.expanded .chevron { transform: rotate(180deg); }
+
+  .note-area {
+    width: 100%;
+    font-size: 12px;
+    padding: .45rem .65rem;
+    background: var(--bg-secondary);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    margin-top: 8px;
+    resize: vertical;
+    display: none;
+    font-family: var(--font);
+    min-height: 60px;
+    transition: border-color .15s;
+  }
+  .note-area:focus { outline: none; border-color: var(--accent); }
+  .task.expanded .note-area { display: block; }
+
+  /* MILESTONES */
+  .milestone {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: .7rem .85rem;
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 5px;
+    font-size: 13px;
+  }
+  .milestone-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: all .3s;
+  }
+  .milestone-label { flex: 1; }
+  .milestone.achieved .milestone-label { text-decoration: line-through; color: var(--text-secondary); }
+
+  .phase-group { margin-bottom: 1.25rem; }
+  .phase-label {
+    font-size: 12px;
+    font-weight: 500;
+    padding: .4rem .85rem;
+    border-radius: var(--radius);
+    margin-bottom: .5rem;
+    display: inline-block;
+  }
+
+  /* LOG */
+  .log-entry {
+    padding: .55rem .85rem;
+    border-left: 2px solid var(--border);
+    margin-bottom: .35rem;
+    transition: border-color .15s;
+  }
+  .log-entry:hover { border-left-color: var(--accent); }
+  .log-time { font-size: 11px; color: var(--text-tertiary); margin-bottom: 2px; }
+  .log-text { font-size: 13px; color: var(--text); }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-secondary);
+    font-size: 13px;
+  }
+  .empty-state .ti { font-size: 28px; display: block; margin-bottom: .75rem; color: var(--text-tertiary); }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-md); border-radius: 3px; }
+
+  /* FOOTER */
+  .footer {
+    padding: .75rem 1.5rem;
+    border-top: 0.5px solid var(--border);
+    background: var(--bg-secondary);
+    font-size: 11px;
+    color: var(--text-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  @media (max-width: 600px) {
+    body { padding: .75rem; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .header { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="title-block">
+      <span class="title-main">
+        <i class="ti ti-circuit-board" style="margin-right:6px;font-size:16px;vertical-align:-2px"></i>
+        LoRa IoT Project tracker
+      </span>
+      <span class="title-sub">Knowledge Distillation · Proactive Relay · Dynamic Obstacle Detection · 3 months</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn" onclick="goToday()">
+        <i class="ti ti-calendar" style="font-size:13px"></i> hôm nay
+      </button>
+      <button class="btn" onclick="resetConfirm()">
+        <i class="ti ti-refresh" style="font-size:13px"></i> reset
+      </button>
+      <button class="btn primary" onclick="exportLog()">
+        <i class="ti ti-download" style="font-size:13px"></i> xuất log
+      </button>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row" id="stats-row"></div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('tasks',this)">
+      <i class="ti ti-checklist" style="font-size:14px"></i> Công việc
+    </button>
+    <button class="tab" onclick="switchTab('milestones',this)">
+      <i class="ti ti-flag" style="font-size:14px"></i> Milestones
+    </button>
+    <button class="tab" onclick="switchTab('log',this)">
+      <i class="ti ti-history" style="font-size:14px"></i> Nhật ký
+    </button>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content" id="main-content"></div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span>Click task để chuyển trạng thái · Click lần 2 để mở ghi chú · Dữ liệu lưu trong trình duyệt</span>
+    <span id="last-saved"></span>
+  </div>
+
+</div>
+
+<script>
+const STORE_KEY = 'lora_tracker_v3';
+
+const PHASES = [
+  {id:'m1',label:'Tháng 1',color:'#16A34A',bg:'#DCFCE7',textColor:'#14532D',weeks:[
+    {id:'w1',label:'Tuần 1',days:'Ngày 1–7',tasks:[
+      {id:'t101',text:'Cài Raspberry Pi OS Lite 64-bit, cấu hình headless SSH + WiFi bằng Raspberry Pi Imager',day:'1',cat:'OS'},
+      {id:'t102',text:'apt update/upgrade, bật SPI/I2C qua raspi-config, cài Python pip git tmux htop',day:'2',cat:'OS'},
+      {id:'t103',text:'Wiring SX1276 → Pi 5 (VCC/GND/MISO/MOSI/SCLK/NSS/RST/DIO0), test REG_VERSION=0x12',day:'3',cat:'Hardware'},
+      {id:'t104',text:'Viết lora_rx_basic.py — decode wire format comm_manager.h, verify CRC-16/CCITT-FALSE',day:'4',cat:'Code'},
+      {id:'t105',text:'Cài Docker, InfluxDB 2.x, Grafana — tạo bucket lora_data retention=90d',day:'5-6',cat:'Infra'},
+      {id:'t106',text:'Grafana dashboard: Temperature, Humidity, RSSI realtime, Packet count, Alert RSSI < -105dBm',day:'7',cat:'Infra'},
+    ]},
+    {id:'w2',label:'Tuần 2',days:'Ngày 8–14',tasks:[
+      {id:'t107',text:'Flash firmware 3× ESP32-S3 N16R8 — NODE_ID 0x03/04/05, stagger TX delay 0/2/4s',day:'8-9',cat:'Firmware'},
+      {id:'t108',text:'Implement PKT_TYPE_BEACON (0x05) — beacon_task() FreeRTOS mỗi 10s, payload: node_id+rssi+battery',day:'10-11',cat:'Code'},
+      {id:'t109',text:'Xây dựng Neighbor Table — lắng nghe beacon, timeout 30s, gửi PKT_TYPE_STATUS (0x06) lên Gateway',day:'12-13',cat:'Code'},
+      {id:'t110',text:'PKT_TYPE_COMMAND (0x04) downlink từ Gateway — test PREPARE_RELAY / CANCEL_RELAY round-trip',day:'14',cat:'Code'},
+    ]},
+    {id:'w3',label:'Tuần 3',days:'Ngày 15–21',tasks:[
+      {id:'t111',text:'Thu thập Telemetry — SQLite telemetry.db, schema: ts/node_id/rssi/snr/freq/relay_used',day:'15-16',cat:'Data'},
+      {id:'t112',text:'Simulate vật cản động 20 lần, label obstacle=1, thu ≥500 sự kiện có label obstacle',day:'17-18',cat:'Data'},
+      {id:'t113',text:'Systemd service lora-gateway + watchdog restart + cron backup 3AM + logrotate',day:'19-20',cat:'Infra'},
+      {id:'t114',text:'Review tuần 3 — vẽ sơ đồ kiến trúc draw.io, đo baseline PDR, viết lab notebook',day:'21',cat:'Doc'},
+    ]},
+    {id:'w4',label:'Tuần 4',days:'Ngày 22–28',tasks:[
+      {id:'t115',text:'Load test 5 node 48h liên tục — kiểm tra memory leak, CPU Pi < 30%, Grafana không gap > 5 phút',day:'22-23',cat:'Test'},
+      {id:'t116',text:'FastAPI server: GET /api/nodes /api/telemetry /api/neighbors /api/health — Swagger tại :8000/docs',day:'24-25',cat:'Code'},
+      {id:'t117',text:'Tổng kết tháng 1 — data quality check pandas, đọc 2 paper LSTM+KD, cài TF trên laptop test',day:'26-28',cat:'Doc'},
+    ]},
+  ]},
+  {id:'m2',label:'Tháng 2',color:'#2563EB',bg:'#DBEAFE',textColor:'#1E3A8A',weeks:[
+    {id:'w5',label:'Tuần 5',days:'Ngày 1–7',tasks:[
+      {id:'t201',text:'Học NumPy, Pandas, Matplotlib — thực hành plot RSSI time-series với telemetry.db của mình',day:'1-2',cat:'ML'},
+      {id:'t202',text:'Data Engineering: sliding window ts=20, feature [rssi,snr,channel_occ], train/val/test 60/20/20',day:'3-4',cat:'ML'},
+      {id:'t203',text:'Simulate 5 scenario obstacle (xe/người/cửa/nhiễu/hỏng) — 100 lần mỗi loại, label obstacle_type',day:'5-6',cat:'Data'},
+      {id:'t204',text:'EDA — RSSI distribution, correlation matrix, tìm threshold, phân biệt S4(nhiễu) vs S1(vật cản)',day:'7',cat:'ML'},
+    ]},
+    {id:'w6',label:'Tuần 6',days:'Ngày 8–14',tasks:[
+      {id:'t205',text:'Train Teacher LSTM: Input(20,3)→LSTM(64)→LSTM(32)→Dense(64)→Dense(output,softmax), 100 epochs, EarlyStopping',day:'8-10',cat:'ML'},
+      {id:'t206',text:'Phân tích Teacher output — soft labels với Temperature Scaling T=3, export soft_labels_train.npy',day:'11',cat:'ML'},
+      {id:'t207',text:'Knowledge Distillation: Student FCNN Dense(16)→Dense(8)→Softmax, Loss=α×CE+(1-α)×KL, α=0.3, T=3',day:'12-13',cat:'ML'},
+      {id:'t208',text:'So sánh Student_KD vs Student_vanilla — accuracy/confusion matrix, verify KD tốt hơn ≥5%',day:'14',cat:'ML'},
+    ]},
+    {id:'w7',label:'Tuần 7',days:'Ngày 15–21',tasks:[
+      {id:'t209',text:'Convert Student → TFLite INT8 quantization, xxd → model.h, verify size < 52KB, inference test Pi',day:'15-16',cat:'ML'},
+      {id:'t210',text:'Tích hợp TFLite Micro vào ESP32: tinyml_agent.c, Tensor Arena 16KB, invoke() < 100ms',day:'17-18',cat:'Firmware'},
+      {id:'t211',text:'OTA infrastructure: model_server.py chunks 200B, ota_receiver.c reassemble SPIFFS, CRC32 verify + rollback',day:'19-20',cat:'Code'},
+      {id:'t212',text:'Integration test end-to-end pipeline: train → distill → TFLite → OTA → inference on ESP32',day:'21',cat:'Test'},
+    ]},
+    {id:'w8',label:'Tuần 8',days:'Ngày 22–28',tasks:[
+      {id:'t213',text:'Simulate relay cơ bản — che ăng-ten Node A, Student phát hiện, relay kích hoạt < 2 giây',day:'22-23',cat:'Test'},
+      {id:'t214',text:'Proactive command: Teacher predict 70% nguy cơ → PKT_TYPE_COMMAND → Node B sẵn sàng trước khi A mất',day:'24-25',cat:'Code'},
+      {id:'t215',text:'Thiết kế A/B test plan — Group A: Student KD+Proactive, Group B: random relay, định nghĩa metrics PDR/latency',day:'26-28',cat:'Doc'},
+    ]},
+  ]},
+  {id:'m3',label:'Tháng 3',color:'#7C3AED',bg:'#EDE9FE',textColor:'#3B0764',weeks:[
+    {id:'w9',label:'Tuần 9',days:'Ngày 1–7',tasks:[
+      {id:'t301',text:'A/B Test chính thức 7 ngày: Group A (KD+Proactive) vs Group B (random) — ≥50 obstacle events mỗi group',day:'1-3',cat:'Test'},
+      {id:'t302',text:'Phân tích kết quả A/B — PDR/latency/false-positive, Mann-Whitney U test, biểu đồ p-value < 0.05',day:'4-5',cat:'Data'},
+      {id:'t303',text:'Retrain Teacher data mới (T1+T2+T3), re-distill Student v2, OTA, verify không regression',day:'6-7',cat:'ML'},
+    ]},
+    {id:'w10',label:'Tuần 10',days:'Ngày 8–14',tasks:[
+      {id:'t304',text:'Phân biệt S4(nhiễu) vs S1(vật cản): thêm feature rssi_derivative, retrain Teacher, accuracy ≥75%',day:'8-9',cat:'ML'},
+      {id:'t305',text:'Hysteresis relay logic: cancel chỉ khi RSSI > threshold liên tục 5s, ngăn relay flickering',day:'10-11',cat:'Firmware'},
+      {id:'t306',text:'Stress test 14 ngày: 5 node, random obstacles, Gateway auto-retrain mỗi 7 ngày, PDR ≥95%',day:'12-13',cat:'Test'},
+      {id:'t307',text:'Midpoint review — tổng hợp số liệu, gap analysis, viết draft abstract 250 words cho báo cáo NCKH',day:'14',cat:'Doc'},
+    ]},
+    {id:'w11',label:'Tuần 11',days:'Ngày 15–21',tasks:[
+      {id:'t308',text:'Viết báo cáo NCKH Section 1–3: Introduction, Related Work vs Grunewald et al., System Architecture + draw.io',day:'15-16',cat:'Doc'},
+      {id:'t309',text:'Viết Section 4–5: KD Methodology (loss formula α×CE+(1-α)×KL), Experimental Results bảng + biểu đồ',day:'17-18',cat:'Doc'},
+      {id:'t310',text:'4 Jupyter Notebooks: data_collection, teacher_training, knowledge_distillation, ab_test — chạy clean end-to-end',day:'19-20',cat:'Doc'},
+      {id:'t311',text:'install_gateway.sh one-command setup + README.md + requirements.txt + docker-compose.yml',day:'21',cat:'Code'},
+    ]},
+    {id:'w12',label:'Tuần 12',days:'Ngày 22–28',tasks:[
+      {id:'t312',text:'Viết Section 6: Conclusion — 3 contributions novelty vs paper gốc, limitations, future work, IEEE refs',day:'22-23',cat:'Doc'},
+      {id:'t313',text:'Demo prep: script 10 phút live, 15 slides Powerpoint/Beamer, rehearse 3 lần, backup video recording',day:'24-25',cat:'Doc'},
+      {id:'t314',text:'Git tag v1.0.0, GitHub release notes, archive dataset/models/notebooks lên Zenodo (DOI)',day:'26',cat:'Doc'},
+      {id:'t315',text:'Retrospective cá nhân: KD có thực sự đóng góp, điều gì khó hơn dự kiến, nếu làm lại sẽ thay đổi gì',day:'27-28',cat:'Doc'},
+    ]},
+  ]},
+];
+
+const MILESTONES = [
+  {id:'ms1',label:'Gateway nhận packet đúng từ 5 node',phase:'m1',week:'w1'},
+  {id:'ms2',label:'Neighbor table hoạt động phân tán trên mỗi node',phase:'m1',week:'w2'},
+  {id:'ms3',label:'Grafana dashboard live update 24/7',phase:'m1',week:'w1'},
+  {id:'ms4',label:'72h uptime không crash',phase:'m1',week:'w4'},
+  {id:'ms5',label:'Dataset ≥25K samples sạch, không NaN',phase:'m2',week:'w6'},
+  {id:'ms6',label:'Teacher LSTM accuracy ≥80% trên test set',phase:'m2',week:'w6'},
+  {id:'ms7',label:'Student TFLite < 52KB inference trên ESP32',phase:'m2',week:'w7'},
+  {id:'ms8',label:'OTA model update end-to-end thành công',phase:'m2',week:'w7'},
+  {id:'ms9',label:'A/B test PDR Group A > Group B ≥20%',phase:'m3',week:'w9'},
+  {id:'ms10',label:'Relay latency < 2 giây từ khi RSSI giảm',phase:'m3',week:'w9'},
+  {id:'ms11',label:'14 ngày uptime PDR ≥95% sustained',phase:'m3',week:'w10'},
+  {id:'ms12',label:'Báo cáo NCKH ≥15 trang + Git v1.0.0',phase:'m3',week:'w12'},
+];
+
+const CAT_COLOR = {
+  OS:'badge-blue', Hardware:'badge-orange', Code:'badge-green',
+  Infra:'badge-blue', Firmware:'badge-orange', Data:'badge-purple',
+  ML:'badge-purple', Test:'badge-gray', Doc:'badge-gray'
+};
+
+let S = {tasks:{}, notes:{}, log:[], tab:'tasks', filter:'all', phase:'m1'};
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) { const d = JSON.parse(raw); if(d.tasks) Object.assign(S, d); }
+  } catch(e) {}
+}
+
+function save() {
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify({tasks:S.tasks, notes:S.notes, log:S.log}));
+    document.getElementById('last-saved').textContent = 'Lưu lúc ' + new Date().toLocaleTimeString('vi-VN');
+  } catch(e) {}
+}
+
+function taskState(id) { return S.tasks[id] || 'todo'; }
+
+function cycleTask(id, text, event) {
+  event.stopPropagation();
+  const cur = taskState(id);
+  const next = cur === 'todo' ? 'in-progress' : cur === 'in-progress' ? 'done' : 'todo';
+  S.tasks[id] = next;
+  const label = next === 'done' ? '✓ Hoàn thành' : next === 'in-progress' ? '▶ Đang làm' : '↩ Đặt lại';
+  S.log.unshift({
+    time: new Date().toLocaleString('vi-VN'),
+    action: label,
+    task: text.length > 70 ? text.slice(0, 70) + '…' : text
+  });
+  if (S.log.length > 300) S.log.pop();
+  save();
+  renderAll();
+}
+
+function toggleExpand(el) {
+  el.classList.toggle('expanded');
+}
+
+function saveNote(id, val) {
+  S.notes[id] = val;
+  save();
+}
+
+function totals() {
+  const all = PHASES.flatMap(p => p.weeks.flatMap(w => w.tasks));
+  const done = all.filter(t => S.tasks[t.id] === 'done').length;
+  const inp = all.filter(t => S.tasks[t.id] === 'in-progress').length;
+  return {total: all.length, done, inp, todo: all.length - done - inp};
+}
+
+function phaseCount(pid) {
+  const p = PHASES.find(x => x.id === pid);
+  if (!p) return {done:0, total:0};
+  const all = p.weeks.flatMap(w => w.tasks);
+  return {done: all.filter(t => S.tasks[t.id] === 'done').length, total: all.length};
+}
+
+function renderStats() {
+  const {total, done, inp} = totals();
+  const pct = total ? Math.round(done / total * 100) : 0;
+  let html = `
+    <div class="stat">
+      <div class="stat-label">Tổng tiến độ</div>
+      <div class="stat-value">${pct}%</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:var(--accent)"></div></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Hoàn thành</div>
+      <div class="stat-value" style="color:var(--green)">${done}</div>
+      <div class="stat-sub">${inp} đang làm · ${total - done - inp} chờ</div>
+    </div>`;
+  PHASES.forEach(p => {
+    const c = phaseCount(p.id);
+    const pp = c.total ? Math.round(c.done / c.total * 100) : 0;
+    html += `<div class="stat">
+      <div class="stat-label">${p.label}</div>
+      <div class="stat-value" style="font-size:16px;color:${p.color}">${c.done}<span style="font-size:13px;color:var(--text-tertiary)">/${c.total}</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pp}%;background:${p.color}"></div></div>
+    </div>`;
+  });
+  document.getElementById('stats-row').innerHTML = html;
+}
+
+function renderTasks() {
+  const phase = PHASES.find(p => p.id === S.phase);
+  let html = `<div class="filter-row">`;
+  PHASES.forEach(p => {
+    const active = S.phase === p.id;
+    html += `<button class="filter-btn phase-btn${active ? ' active' : ''}"
+      style="${active ? `background:${p.color};color:#fff;border-color:${p.color}` : ''}"
+      onclick="selectPhase('${p.id}')">${p.label}</button>`;
+  });
+  html += `<span class="spacer"></span>`;
+  [['all','Tất cả'],['todo','Chưa làm'],['in-progress','Đang làm'],['done','Xong']].forEach(([f,l]) => {
+    html += `<button class="filter-btn${S.filter === f ? ' active' : ''}" onclick="setFilter('${f}')">${l}</button>`;
+  });
+  html += `</div>`;
+
+  phase.weeks.forEach(week => {
+    const filtered = week.tasks.filter(t => {
+      const ts = taskState(t.id);
+      return S.filter === 'all' || ts === S.filter || (S.filter === 'todo' && !S.tasks[t.id]);
+    });
+    if (!filtered.length) return;
+
+    const done = week.tasks.filter(t => S.tasks[t.id] === 'done').length;
+    const pct = Math.round(done / week.tasks.length * 100);
+
+    html += `<div class="week-section">
+      <div class="week-header" style="background:${phase.bg}">
+        <span class="week-title" style="color:${phase.textColor}">${week.label}
+          <span style="font-weight:400;color:${phase.color};margin-left:6px">${week.days}</span>
+        </span>
+        <span class="week-meta" style="color:${phase.color}">${done}/${week.tasks.length} · ${pct}%</span>
+      </div>
+      <div class="task-list">`;
+
+    filtered.forEach(t => {
+      const ts = taskState(t.id);
+      const note = S.notes[t.id] || '';
+      const checkClass = ts === 'done' ? ' checked' : ts === 'in-progress' ? ' in-prog' : '';
+      const taskClass = ts === 'done' ? ' done' : ts === 'in-progress' ? ' in-progress' : '';
+      const checkIcon = ts === 'done' ? '<i class="ti ti-check" style="font-size:11px"></i>' : ts === 'in-progress' ? '<i class="ti ti-player-play" style="font-size:10px"></i>' : '';
+
+      html += `<div class="task${taskClass}" onclick="toggleExpand(this)">
+        <div class="check${checkClass}" onclick="cycleTask('${t.id}',\`${t.text.replace(/`/g,"'").replace(/\n/g,' ')}\`,event)">${checkIcon}</div>
+        <div class="task-body">
+          <div class="task-text">${t.text}</div>
+          <div class="task-meta">
+            <span class="badge ${CAT_COLOR[t.cat] || 'badge-gray'}">${t.cat}</span>
+            <span class="day-info"><i class="ti ti-calendar" style="font-size:11px"></i> Ngày ${t.day}</span>
+            ${note ? `<span class="day-info" style="color:var(--info-text)"><i class="ti ti-note" style="font-size:11px"></i> ghi chú</span>` : ''}
+          </div>
+          <textarea class="note-area" placeholder="Ghi chú: bug gặp phải, lệnh hay dùng, kết quả đo được..."
+            onclick="event.stopPropagation()"
+            oninput="saveNote('${t.id}',this.value)">${note}</textarea>
+        </div>
+        <i class="ti ti-chevron-down chevron"></i>
+      </div>`;
+    });
+
+    html += `</div></div>`;
+  });
+
+  document.getElementById('main-content').innerHTML = html;
+}
+
+function renderMilestones() {
+  let html = '';
+  PHASES.forEach(phase => {
+    const ms = MILESTONES.filter(m => m.phase === phase.id);
+    html += `<div class="phase-group">
+      <span class="phase-label" style="background:${phase.bg};color:${phase.color}">${phase.label}</span>`;
+    ms.forEach(m => {
+      const pObj = PHASES.find(p => p.id === m.phase);
+      const wObj = pObj?.weeks.find(w => w.id === m.week);
+      const tasks = wObj?.tasks || [];
+      const achieved = tasks.length > 0 && tasks.every(t => S.tasks[t.id] === 'done');
+      html += `<div class="milestone${achieved ? ' achieved' : ''}">
+        <div class="milestone-dot" style="background:${achieved ? phase.color : 'var(--border-md)'}"></div>
+        <span class="milestone-label">${m.label}</span>
+        ${achieved
+          ? `<span class="badge badge-green"><i class="ti ti-check" style="font-size:10px"></i> đạt</span>`
+          : `<span style="font-size:11px;color:var(--text-tertiary)">${m.week.replace('w','Tuần ')}</span>`}
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  document.getElementById('main-content').innerHTML = html;
+}
+
+function renderLog() {
+  if (!S.log.length) {
+    document.getElementById('main-content').innerHTML = `<div class="empty-state">
+      <i class="ti ti-history"></i>
+      Chưa có hoạt động nào.<br>Bắt đầu click vào task để ghi nhật ký tự động.
+    </div>`;
+    return;
+  }
+  let html = `<div style="display:flex;justify-content:flex-end;margin-bottom:.75rem">
+    <button class="btn" onclick="clearLog()"><i class="ti ti-trash" style="font-size:13px"></i> Xóa log</button>
+  </div>`;
+  S.log.slice(0, 100).forEach(e => {
+    html += `<div class="log-entry">
+      <div class="log-time">${e.time}</div>
+      <div class="log-text">${e.action} — ${e.task}</div>
+    </div>`;
+  });
+  document.getElementById('main-content').innerHTML = html;
+}
+
+function renderAll() {
+  renderStats();
+  if (S.tab === 'tasks') renderTasks();
+  else if (S.tab === 'milestones') renderMilestones();
+  else renderLog();
+}
+
+function switchTab(tab, el) {
+  S.tab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderAll();
+}
+
+function selectPhase(id) { S.phase = id; renderTasks(); }
+function setFilter(f) { S.filter = f; renderTasks(); }
+
+function clearLog() {
+  if (confirm('Xóa toàn bộ nhật ký?')) { S.log = []; save(); renderLog(); }
+}
+
+function resetConfirm() {
+  if (confirm('Reset toàn bộ tiến độ? Hành động này không thể hoàn tác.')) {
+    S.tasks = {}; S.notes = {}; S.log = [];
+    save(); renderAll();
+  }
+}
+
+function goToday() {
+  const start = new Date('2026-05-12');
+  const days = Math.max(0, Math.floor((Date.now() - start) / 86400000));
+  const phaseIdx = days < 28 ? 0 : days < 56 ? 1 : 2;
+  S.phase = PHASES[Math.min(phaseIdx, 2)].id;
+  S.tab = 'tasks';
+  S.filter = 'all';
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === 0));
+  renderAll();
+}
+
+function exportLog() {
+  const lines = [
+    'LoRa IoT Project — Báo cáo tiến độ',
+    '='.repeat(50),
+    `Xuất lúc: ${new Date().toLocaleString('vi-VN')}`,
+    '',
+    '== TIẾN ĐỘ CÔNG VIỆC ==',
+    ''
+  ];
+  PHASES.forEach(phase => {
+    lines.push(`[${phase.label}]`);
+    phase.weeks.forEach(week => {
+      lines.push(`  ${week.label} — ${week.days}`);
+      week.tasks.forEach(t => {
+        const ts = S.tasks[t.id] || 'todo';
+        const mark = ts === 'done' ? '[X]' : ts === 'in-progress' ? '[>]' : '[ ]';
+        lines.push(`    ${mark} [Ngày ${t.day}] [${t.cat}] ${t.text.replace(/\n/g,' ')}`);
+        if (S.notes[t.id]) lines.push(`        Ghi chú: ${S.notes[t.id]}`);
+      });
+    });
+    lines.push('');
+  });
+
+  const {total, done, inp} = totals();
+  lines.push('== THỐNG KÊ ==');
+  lines.push(`Tổng: ${total} task`);
+  lines.push(`Hoàn thành: ${done} (${Math.round(done/total*100)}%)`);
+  lines.push(`Đang làm: ${inp}`);
+  lines.push(`Chưa làm: ${total - done - inp}`);
+  lines.push('');
+
+  if (S.log.length) {
+    lines.push('== NHẬT KÝ HOẠT ĐỘNG ==');
+    S.log.forEach(e => lines.push(`${e.time} | ${e.action} | ${e.task}`));
+  }
+
+  const blob = new Blob([lines.join('\n')], {type: 'text/plain;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `lora_tracker_${new Date().toISOString().slice(0,10)}.txt`;
+  a.click();
+}
+
+load();
+renderAll();
+</script>
+</body>
+</html>
