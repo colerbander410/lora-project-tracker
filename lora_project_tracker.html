@@ -6,822 +6,680 @@
 <title>LoRa IoT Project Tracker</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
 <style>
-  :root {
-    --bg: #ffffff;
-    --bg-secondary: #f8fafc;
-    --bg-tertiary: #f1f5f9;
-    --text: #111827;
-    --text-secondary: #6b7280;
-    --text-tertiary: #9ca3af;
-    --border: rgba(0,0,0,0.12);
-    --border-md: rgba(0,0,0,0.2);
-    --accent: #2563eb;
-    --green: #16a34a;
-    --green-bg: #dcfce7;
-    --green-text: #14532d;
-    --blue-bg: #dbeafe;
-    --blue-text: #1e3a8a;
-    --purple: #7c3aed;
-    --purple-bg: #ede9fe;
-    --purple-text: #3b0764;
-    --orange: #ea580c;
-    --red: #dc2626;
-    --info-bg: #dbeafe;
-    --info-text: #1e3a8a;
-    --success-bg: #dcfce7;
-    --success-text: #14532d;
-    --warn-bg: #fef3c7;
-    --warn-text: #78350f;
-    --radius: 8px;
-    --radius-lg: 12px;
-    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  }
+:root {
+  --bg:#ffffff;--bg2:#f8fafc;--bg3:#f1f5f9;--text:#111827;--text2:#6b7280;--text3:#9ca3af;
+  --border:rgba(0,0,0,0.1);--border2:rgba(0,0,0,0.18);--accent:#2563eb;--green:#16a34a;
+  --green-bg:#dcfce7;--green-text:#14532d;--blue-bg:#dbeafe;--blue-text:#1e3a8a;
+  --purple:#7c3aed;--purple-bg:#ede9fe;--purple-text:#3b0764;--orange:#ea580c;
+  --warn-bg:#fef3c7;--warn-text:#78350f;--danger:#dc2626;--danger-bg:#fee2e2;--danger-text:#7f1d1d;
+  --info-bg:#dbeafe;--info-text:#1e3a8a;--success-bg:#dcfce7;--success-text:#14532d;
+  --radius:8px;--radius-lg:12px;--font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+@media(prefers-color-scheme:dark){
+  :root{--bg:#1a1a1a;--bg2:#242424;--bg3:#2e2e2e;--text:#f0f0f0;--text2:#a0a0a0;--text3:#6b6b6b;
+  --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2);
+  --green-bg:#052e16;--green-text:#86efac;--blue-bg:#0f172a;--blue-text:#93c5fd;
+  --purple-bg:#1e1b4b;--purple-text:#c4b5fd;--warn-bg:#1c1007;--warn-text:#fcd34d;
+  --danger-bg:#1f0707;--danger-text:#fca5a5;--info-bg:#0f172a;--info-text:#93c5fd;
+  --success-bg:#052e16;--success-text:#86efac;}
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg3);color:var(--text);min-height:100vh;padding:1.25rem}
+.app{max-width:980px;margin:0 auto;background:var(--bg);border-radius:var(--radius-lg);border:0.5px solid var(--border);overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.06)}
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #1a1a1a;
-      --bg-secondary: #242424;
-      --bg-tertiary: #2e2e2e;
-      --text: #f0f0f0;
-      --text-secondary: #a0a0a0;
-      --text-tertiary: #6b6b6b;
-      --border: rgba(255,255,255,0.1);
-      --border-md: rgba(255,255,255,0.2);
-      --green-bg: #052e16;
-      --green-text: #86efac;
-      --blue-bg: #0f172a;
-      --blue-text: #93c5fd;
-      --purple-bg: #1e1b4b;
-      --purple-text: #c4b5fd;
-      --info-bg: #0f172a;
-      --info-text: #93c5fd;
-      --success-bg: #052e16;
-      --success-text: #86efac;
-      --warn-bg: #1c1007;
-      --warn-text: #fcd34d;
-    }
-  }
+/* HEADER */
+.header{padding:1.1rem 1.5rem;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap}
+.title-wrap{display:flex;flex-direction:column;gap:3px}
+.title-main{font-size:16px;font-weight:500}
+.title-sub{font-size:11px;color:var(--text2)}
+.hdr-actions{display:flex;gap:6px;flex-wrap:wrap}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+/* BUTTONS */
+.btn{font-size:12px;padding:5px 11px;border-radius:var(--radius);border:0.5px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .15s;font-family:var(--font);white-space:nowrap}
+.btn:hover{background:var(--bg2);color:var(--text)}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.primary:hover{opacity:.88}
+.btn.danger{background:var(--danger-bg);color:var(--danger);border-color:var(--danger)}
+.btn.success{background:var(--success-bg);color:var(--green);border-color:var(--green)}
+.btn.sm{font-size:11px;padding:3px 8px}
 
-  body {
-    font-family: var(--font);
-    background: var(--bg-tertiary);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 1.5rem;
-  }
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:7px;padding:.9rem 1.5rem;background:var(--bg2);border-bottom:0.5px solid var(--border)}
+.stat{background:var(--bg);border-radius:var(--radius);padding:.6rem .8rem;border:0.5px solid var(--border)}
+.stat-label{font-size:11px;color:var(--text2);margin-bottom:3px}
+.stat-value{font-size:19px;font-weight:500;line-height:1.2}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:2px}
+.pbar{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;margin-top:5px}
+.pfill{height:100%;border-radius:2px;transition:width .5s ease}
 
-  .container {
-    max-width: 960px;
-    margin: 0 auto;
-    background: var(--bg);
-    border-radius: var(--radius-lg);
-    border: 0.5px solid var(--border);
-    overflow: hidden;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-  }
+/* TABS */
+.tabs{display:flex;border-bottom:0.5px solid var(--border);padding:0 1.5rem;overflow-x:auto}
+.tab{padding:.6rem .9rem;font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--text2);border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;font-family:var(--font);display:flex;align-items:center;gap:5px}
+.tab:hover:not(.active){color:var(--text)}
+.tab.active{color:var(--text);border-bottom-color:var(--accent)}
 
-  /* HEADER */
-  .header {
-    padding: 1.25rem 1.5rem;
-    border-bottom: 0.5px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
-    background: var(--bg);
-  }
+/* CONTENT */
+.content{padding:1rem 1.5rem 2rem}
 
-  .title-block { display: flex; flex-direction: column; gap: 4px; }
-  .title-main { font-size: 17px; font-weight: 500; color: var(--text); }
-  .title-sub { font-size: 12px; color: var(--text-secondary); }
+/* FILTER */
+.filter-row{display:flex;gap:5px;margin-bottom:.9rem;flex-wrap:wrap;align-items:center}
+.fbtn{font-size:11px;padding:3px 10px;border-radius:20px;border:0.5px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;transition:all .15s;font-family:var(--font)}
+.fbtn:hover{color:var(--text)}
+.fbtn.active{background:var(--text);color:var(--bg);border-color:transparent}
+.fbtn.phase{border-radius:var(--radius)}
+.spacer{flex:1}
 
-  .header-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+/* PHASE EDITOR */
+.phase-editor{margin-bottom:1.5rem;border:0.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden}
+.phase-header{display:flex;align-items:center;justify-content:space-between;padding:.6rem 1rem;gap:.5rem}
+.phase-title-input{font-size:14px;font-weight:500;border:none;background:transparent;color:inherit;width:120px;font-family:var(--font);outline:none;cursor:pointer}
+.phase-title-input:focus{background:rgba(255,255,255,0.15);border-radius:4px;padding:0 4px}
+.phase-actions{display:flex;gap:5px;align-items:center}
 
-  .btn {
-    font-size: 12px;
-    padding: 6px 12px;
-    border-radius: var(--radius);
-    border: 0.5px solid var(--border-md);
-    background: transparent;
-    color: var(--text-secondary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    transition: all .15s;
-    font-family: var(--font);
-  }
-  .btn:hover { background: var(--bg-secondary); color: var(--text); }
-  .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .btn.primary:hover { opacity: .9; }
+/* WEEK */
+.week-wrap{border-top:0.5px solid var(--border)}
+.week-header{display:flex;align-items:center;justify-content:space-between;padding:.45rem .85rem;gap:.5rem}
+.week-header-left{display:flex;align-items:center;gap:.5rem;flex:1;min-width:0}
+.week-label-input{font-size:12px;font-weight:500;border:none;background:transparent;color:inherit;width:70px;font-family:var(--font);outline:none;cursor:pointer}
+.week-label-input:focus{background:var(--bg2);border-radius:4px;padding:0 4px}
+.week-days-input{font-size:11px;border:none;background:transparent;color:var(--text2);width:100px;font-family:var(--font);outline:none;cursor:pointer}
+.week-days-input:focus{background:var(--bg2);border-radius:4px;padding:0 4px}
+.week-prog{font-size:11px;margin-left:.5rem;white-space:nowrap}
+.week-actions{display:flex;gap:4px}
+.task-list{padding:.4rem .85rem .6rem}
 
-  /* STATS */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 8px;
-    padding: 1rem 1.5rem;
-    background: var(--bg-secondary);
-    border-bottom: 0.5px solid var(--border);
-  }
+/* TASK */
+.task{display:flex;align-items:flex-start;gap:9px;padding:.55rem .7rem;background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius);margin-bottom:4px;transition:border-color .15s;position:relative}
+.task:hover{border-color:var(--border2)}
+.task.done{opacity:.58}
+.task.done .task-text-input{text-decoration:line-through;color:var(--text2)}
+.task.inprog{border-left:2px solid var(--accent)}
+.check{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border2);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;font-size:10px}
+.check.checked{background:var(--green);border-color:var(--green);color:#fff}
+.check.inp{background:var(--accent);border-color:var(--accent);color:#fff}
+.task-body{flex:1;min-width:0}
+.task-text-input{width:100%;font-size:13px;line-height:1.5;border:none;background:transparent;color:var(--text);font-family:var(--font);outline:none;resize:none;cursor:pointer;padding:0}
+.task-text-input:focus{cursor:text;background:var(--bg2);border-radius:4px;padding:2px 6px}
+.task-meta{display:flex;align-items:center;gap:5px;margin-top:4px;flex-wrap:wrap}
+.badge{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:500;cursor:pointer;border:0.5px solid transparent}
+.cat-select{font-size:10px;padding:2px 4px;border-radius:10px;border:0.5px solid var(--border2);background:var(--bg2);color:var(--text2);cursor:pointer;font-family:var(--font)}
+.day-input{font-size:11px;color:var(--text3);border:none;background:transparent;font-family:var(--font);width:60px;outline:none;cursor:pointer}
+.day-input:focus{background:var(--bg2);border-radius:4px;padding:0 4px;color:var(--text)}
+.note-area{width:100%;font-size:12px;padding:.4rem .5rem;background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);color:var(--text);margin-top:6px;resize:vertical;display:none;font-family:var(--font);min-height:54px}
+.note-area:focus{outline:none;border-color:var(--accent)}
+.task.expanded .note-area{display:block}
+.task-actions{display:flex;gap:3px;flex-shrink:0;opacity:0;transition:opacity .15s}
+.task:hover .task-actions{opacity:1}
 
-  .stat {
-    background: var(--bg);
-    border-radius: var(--radius);
-    padding: .65rem .85rem;
-    border: 0.5px solid var(--border);
-  }
-  .stat-label { font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; }
-  .stat-value { font-size: 20px; font-weight: 500; line-height: 1.2; }
-  .stat-sub { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+/* ADD BUTTONS */
+.add-task-btn{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text3);padding:.35rem .7rem;border:0.5px dashed var(--border2);border-radius:var(--radius);cursor:pointer;transition:all .15s;background:transparent;font-family:var(--font);width:100%;margin-top:2px}
+.add-task-btn:hover{color:var(--accent);border-color:var(--accent);background:var(--info-bg)}
+.add-week-btn{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text3);padding:.3rem .85rem;border-top:0.5px dashed var(--border2);cursor:pointer;transition:all .15s;background:transparent;font-family:var(--font);width:100%}
+.add-week-btn:hover{color:var(--accent);background:var(--info-bg)}
+.add-phase-btn{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text3);padding:.65rem 1rem;border:0.5px dashed var(--border2);border-radius:var(--radius-lg);cursor:pointer;transition:all .15s;background:transparent;font-family:var(--font);width:100%;margin-bottom:1rem;justify-content:center}
+.add-phase-btn:hover{color:var(--accent);border-color:var(--accent);background:var(--info-bg)}
 
-  .progress-bar {
-    height: 5px;
-    background: var(--bg-tertiary);
-    border-radius: 3px;
-    overflow: hidden;
-    margin-top: 6px;
-  }
-  .progress-fill {
-    height: 100%;
-    border-radius: 3px;
-    transition: width .6s cubic-bezier(.4,0,.2,1);
-  }
+/* MILESTONES */
+.ms-item{display:flex;align-items:center;gap:9px;padding:.6rem .8rem;background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius);margin-bottom:4px}
+.ms-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.ms-label{flex:1;font-size:13px}
+.ms-label.achieved{text-decoration:line-through;color:var(--text2)}
 
-  /* TABS */
-  .tabs {
-    display: flex;
-    border-bottom: 0.5px solid var(--border);
-    padding: 0 1.5rem;
-    background: var(--bg);
-    overflow-x: auto;
-    gap: 0;
-  }
-  .tab {
-    padding: .65rem 1rem;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    background: transparent;
-    color: var(--text-secondary);
-    border-bottom: 2px solid transparent;
-    white-space: nowrap;
-    transition: all .15s;
-    font-family: var(--font);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .tab:hover:not(.active) { color: var(--text); }
-  .tab.active { color: var(--text); border-bottom-color: var(--accent); }
+/* LOG */
+.log-item{padding:.5rem .8rem;border-left:2px solid var(--border2);margin-bottom:.3rem}
+.log-item:hover{border-left-color:var(--accent)}
+.log-time{font-size:11px;color:var(--text3);margin-bottom:1px}
+.log-text{font-size:13px}
 
-  /* CONTENT */
-  .content { padding: 1rem 1.5rem 2rem; }
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:1000;padding:1rem}
+.modal{background:var(--bg);border-radius:var(--radius-lg);border:0.5px solid var(--border2);padding:1.5rem;max-width:480px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.15)}
+.modal h3{font-size:15px;font-weight:500;margin-bottom:1rem}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:1.25rem}
+.modal label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px;margin-top:.75rem}
+.modal input,.modal select,.modal textarea{width:100%;font-size:13px;padding:.45rem .65rem;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:var(--font)}
+.modal input:focus,.modal select:focus,.modal textarea:focus{outline:none;border-color:var(--accent)}
+.color-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.color-swatch{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .15s}
+.color-swatch.selected{border-color:var(--text);transform:scale(1.15)}
 
-  /* FILTER ROW */
-  .filter-row {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  .filter-btn {
-    font-size: 12px;
-    padding: 4px 12px;
-    border-radius: 20px;
-    border: 0.5px solid var(--border-md);
-    background: transparent;
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: all .15s;
-    font-family: var(--font);
-  }
-  .filter-btn:hover { color: var(--text); }
-  .filter-btn.active {
-    background: var(--text);
-    color: var(--bg);
-    border-color: transparent;
-  }
-  .filter-btn.phase-btn { border-radius: var(--radius); }
+/* IMPORT/EXPORT */
+.io-zone{padding:.75rem;background:var(--bg2);border:0.5px dashed var(--border2);border-radius:var(--radius);font-size:12px;color:var(--text2);cursor:pointer;text-align:center;transition:all .15s}
+.io-zone:hover{border-color:var(--accent);color:var(--accent)}
 
-  .spacer { flex: 1; }
+/* EMPTY */
+.empty{text-align:center;padding:2.5rem 1rem;color:var(--text2);font-size:13px}
+.empty i{font-size:28px;display:block;margin-bottom:.6rem;color:var(--text3)}
 
-  /* WEEK SECTION */
-  .week-section { margin-bottom: 1.25rem; }
+/* FOOTER */
+.footer{padding:.6rem 1.5rem;border-top:0.5px solid var(--border);background:var(--bg2);font-size:11px;color:var(--text3);display:flex;justify-content:space-between;align-items:center}
 
-  .week-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: .5rem .85rem;
-    border-radius: var(--radius);
-    margin-bottom: .5rem;
-    cursor: default;
-  }
-  .week-title { font-size: 13px; font-weight: 500; }
-  .week-meta { font-size: 12px; }
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 
-  /* TASKS */
-  .task-list { display: flex; flex-direction: column; gap: 4px; }
-
-  .task {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: .65rem .85rem;
-    background: var(--bg);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: border-color .15s, background .15s;
-    position: relative;
-  }
-  .task:hover { border-color: var(--border-md); background: var(--bg-secondary); }
-  .task.done { opacity: .6; }
-  .task.done .task-text { text-decoration: line-through; color: var(--text-secondary); }
-  .task.in-progress { border-left: 2px solid var(--accent); }
-
-  .check {
-    width: 19px;
-    height: 19px;
-    border-radius: 50%;
-    border: 1.5px solid var(--border-md);
-    flex-shrink: 0;
-    margin-top: 1px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all .15s;
-    font-size: 11px;
-  }
-  .check.checked { background: var(--green); border-color: var(--green); color: #fff; }
-  .check.in-prog { background: var(--accent); border-color: var(--accent); color: #fff; }
-
-  .task-body { flex: 1; min-width: 0; }
-  .task-text { font-size: 13px; line-height: 1.55; }
-
-  .task-meta {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 5px;
-    flex-wrap: wrap;
-  }
-
-  .badge {
-    font-size: 10px;
-    padding: 2px 8px;
-    border-radius: 10px;
-    font-weight: 500;
-    white-space: nowrap;
-  }
-  .badge-green { background: var(--success-bg); color: var(--success-text); }
-  .badge-blue { background: var(--info-bg); color: var(--info-text); }
-  .badge-orange { background: var(--warn-bg); color: var(--warn-text); }
-  .badge-purple { background: var(--purple-bg); color: var(--purple-text); }
-  .badge-gray { background: var(--bg-secondary); color: var(--text-secondary); border: 0.5px solid var(--border); }
-
-  .day-info { font-size: 11px; color: var(--text-tertiary); display: flex; align-items: center; gap: 3px; }
-
-  .chevron {
-    font-size: 14px;
-    color: var(--text-tertiary);
-    flex-shrink: 0;
-    margin-top: 2px;
-    transition: transform .2s;
-  }
-  .task.expanded .chevron { transform: rotate(180deg); }
-
-  .note-area {
-    width: 100%;
-    font-size: 12px;
-    padding: .45rem .65rem;
-    background: var(--bg-secondary);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text);
-    margin-top: 8px;
-    resize: vertical;
-    display: none;
-    font-family: var(--font);
-    min-height: 60px;
-    transition: border-color .15s;
-  }
-  .note-area:focus { outline: none; border-color: var(--accent); }
-  .task.expanded .note-area { display: block; }
-
-  /* MILESTONES */
-  .milestone {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: .7rem .85rem;
-    background: var(--bg);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    margin-bottom: 5px;
-    font-size: 13px;
-  }
-  .milestone-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    transition: all .3s;
-  }
-  .milestone-label { flex: 1; }
-  .milestone.achieved .milestone-label { text-decoration: line-through; color: var(--text-secondary); }
-
-  .phase-group { margin-bottom: 1.25rem; }
-  .phase-label {
-    font-size: 12px;
-    font-weight: 500;
-    padding: .4rem .85rem;
-    border-radius: var(--radius);
-    margin-bottom: .5rem;
-    display: inline-block;
-  }
-
-  /* LOG */
-  .log-entry {
-    padding: .55rem .85rem;
-    border-left: 2px solid var(--border);
-    margin-bottom: .35rem;
-    transition: border-color .15s;
-  }
-  .log-entry:hover { border-left-color: var(--accent); }
-  .log-time { font-size: 11px; color: var(--text-tertiary); margin-bottom: 2px; }
-  .log-text { font-size: 13px; color: var(--text); }
-
-  .empty-state {
-    text-align: center;
-    padding: 3rem 1rem;
-    color: var(--text-secondary);
-    font-size: 13px;
-  }
-  .empty-state .ti { font-size: 28px; display: block; margin-bottom: .75rem; color: var(--text-tertiary); }
-
-  /* SCROLLBAR */
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border-md); border-radius: 3px; }
-
-  /* FOOTER */
-  .footer {
-    padding: .75rem 1.5rem;
-    border-top: 0.5px solid var(--border);
-    background: var(--bg-secondary);
-    font-size: 11px;
-    color: var(--text-tertiary);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  @media (max-width: 600px) {
-    body { padding: .75rem; }
-    .stats-row { grid-template-columns: repeat(2, 1fr); }
-    .header { flex-direction: column; align-items: flex-start; }
-  }
+@media(max-width:600px){body{padding:.5rem}.stats{grid-template-columns:repeat(2,1fr)}.header{flex-direction:column;align-items:flex-start}}
 </style>
 </head>
 <body>
+<div class="app">
 
-<div class="container">
-
-  <!-- HEADER -->
   <div class="header">
-    <div class="title-block">
-      <span class="title-main">
-        <i class="ti ti-circuit-board" style="margin-right:6px;font-size:16px;vertical-align:-2px"></i>
-        LoRa IoT Project tracker
-      </span>
-      <span class="title-sub">Knowledge Distillation · Proactive Relay · Dynamic Obstacle Detection · 3 months</span>
+    <div class="title-wrap">
+      <span class="title-main"><i class="ti ti-circuit-board" style="margin-right:5px;font-size:15px;vertical-align:-2px"></i>LoRa IoT Project Tracker</span>
+      <span class="title-sub">Chỉnh sửa trực tiếp · Lưu tự động · Xuất/nhập JSON</span>
     </div>
-    <div class="header-actions">
-      <button class="btn" onclick="goToday()">
-        <i class="ti ti-calendar" style="font-size:13px"></i> hôm nay
-      </button>
-      <button class="btn" onclick="resetConfirm()">
-        <i class="ti ti-refresh" style="font-size:13px"></i> reset
-      </button>
-      <button class="btn primary" onclick="exportLog()">
-        <i class="ti ti-download" style="font-size:13px"></i> xuất log
-      </button>
+    <div class="hdr-actions">
+      <button class="btn" onclick="importJSON()"><i class="ti ti-upload" style="font-size:12px"></i> Nhập JSON</button>
+      <button class="btn" onclick="exportJSON()"><i class="ti ti-download" style="font-size:12px"></i> Xuất JSON</button>
+      <button class="btn" onclick="exportTXT()"><i class="ti ti-file-text" style="font-size:12px"></i> Xuất TXT</button>
+      <button class="btn danger" onclick="resetAll()"><i class="ti ti-refresh" style="font-size:12px"></i> Reset</button>
     </div>
   </div>
 
-  <!-- STATS -->
-  <div class="stats-row" id="stats-row"></div>
+  <div class="stats" id="stats"></div>
 
-  <!-- TABS -->
   <div class="tabs">
-    <button class="tab active" onclick="switchTab('tasks',this)">
-      <i class="ti ti-checklist" style="font-size:14px"></i> Công việc
-    </button>
-    <button class="tab" onclick="switchTab('milestones',this)">
-      <i class="ti ti-flag" style="font-size:14px"></i> Milestones
-    </button>
-    <button class="tab" onclick="switchTab('log',this)">
-      <i class="ti ti-history" style="font-size:14px"></i> Nhật ký
-    </button>
+    <button class="tab active" onclick="switchTab('tasks',this)"><i class="ti ti-checklist" style="font-size:13px"></i> Công việc</button>
+    <button class="tab" onclick="switchTab('milestones',this)"><i class="ti ti-flag" style="font-size:13px"></i> Milestones</button>
+    <button class="tab" onclick="switchTab('log',this)"><i class="ti ti-history" style="font-size:13px"></i> Nhật ký</button>
+    <button class="tab" onclick="switchTab('io',this)"><i class="ti ti-settings" style="font-size:13px"></i> Cài đặt</button>
   </div>
 
-  <!-- CONTENT -->
-  <div class="content" id="main-content"></div>
-
-  <!-- FOOTER -->
-  <div class="footer">
-    <span>Click task để chuyển trạng thái · Click lần 2 để mở ghi chú · Dữ liệu lưu trong trình duyệt</span>
-    <span id="last-saved"></span>
-  </div>
-
+  <div class="content" id="content"></div>
+  <div class="footer"><span>Click task để đổi trạng thái · Double-click text để sửa · Hover để thấy nút thêm/xóa</span><span id="saved-at"></span></div>
 </div>
 
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" style="display:none" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal-body"></div>
+</div>
+
+<input type="file" id="file-input" accept=".json" style="display:none" onchange="handleImport(event)">
+
 <script>
-const STORE_KEY = 'lora_tracker_v3';
+const STORE = 'lora_tracker_v4';
+const COLORS = ['#16A34A','#2563EB','#7C3AED','#EA580C','#0891B2','#DC2626','#D97706','#0D9488'];
+const CAT_OPTS = ['OS','Hardware','Code','Infra','Firmware','Data','ML','Test','Doc'];
+const CAT_CLS = {OS:'badge-blue',Hardware:'badge-orange',Code:'badge-green',Infra:'badge-blue',Firmware:'badge-orange',Data:'badge-purple',ML:'badge-purple',Test:'badge-gray',Doc:'badge-gray'};
 
-const PHASES = [
-  {id:'m1',label:'Tháng 1',color:'#16A34A',bg:'#DCFCE7',textColor:'#14532D',weeks:[
-    {id:'w1',label:'Tuần 1',days:'Ngày 1–7',tasks:[
-      {id:'t101',text:'Cài Raspberry Pi OS Lite 64-bit, cấu hình headless SSH + WiFi bằng Raspberry Pi Imager',day:'1',cat:'OS'},
-      {id:'t102',text:'apt update/upgrade, bật SPI/I2C qua raspi-config, cài Python pip git tmux htop',day:'2',cat:'OS'},
-      {id:'t103',text:'Wiring SX1276 → Pi 5 (VCC/GND/MISO/MOSI/SCLK/NSS/RST/DIO0), test REG_VERSION=0x12',day:'3',cat:'Hardware'},
-      {id:'t104',text:'Viết lora_rx_basic.py — decode wire format comm_manager.h, verify CRC-16/CCITT-FALSE',day:'4',cat:'Code'},
-      {id:'t105',text:'Cài Docker, InfluxDB 2.x, Grafana — tạo bucket lora_data retention=90d',day:'5-6',cat:'Infra'},
-      {id:'t106',text:'Grafana dashboard: Temperature, Humidity, RSSI realtime, Packet count, Alert RSSI < -105dBm',day:'7',cat:'Infra'},
-    ]},
-    {id:'w2',label:'Tuần 2',days:'Ngày 8–14',tasks:[
-      {id:'t107',text:'Flash firmware 3× ESP32-S3 N16R8 — NODE_ID 0x03/04/05, stagger TX delay 0/2/4s',day:'8-9',cat:'Firmware'},
-      {id:'t108',text:'Implement PKT_TYPE_BEACON (0x05) — beacon_task() FreeRTOS mỗi 10s, payload: node_id+rssi+battery',day:'10-11',cat:'Code'},
-      {id:'t109',text:'Xây dựng Neighbor Table — lắng nghe beacon, timeout 30s, gửi PKT_TYPE_STATUS (0x06) lên Gateway',day:'12-13',cat:'Code'},
-      {id:'t110',text:'PKT_TYPE_COMMAND (0x04) downlink từ Gateway — test PREPARE_RELAY / CANCEL_RELAY round-trip',day:'14',cat:'Code'},
-    ]},
-    {id:'w3',label:'Tuần 3',days:'Ngày 15–21',tasks:[
-      {id:'t111',text:'Thu thập Telemetry — SQLite telemetry.db, schema: ts/node_id/rssi/snr/freq/relay_used',day:'15-16',cat:'Data'},
-      {id:'t112',text:'Simulate vật cản động 20 lần, label obstacle=1, thu ≥500 sự kiện có label obstacle',day:'17-18',cat:'Data'},
-      {id:'t113',text:'Systemd service lora-gateway + watchdog restart + cron backup 3AM + logrotate',day:'19-20',cat:'Infra'},
-      {id:'t114',text:'Review tuần 3 — vẽ sơ đồ kiến trúc draw.io, đo baseline PDR, viết lab notebook',day:'21',cat:'Doc'},
-    ]},
-    {id:'w4',label:'Tuần 4',days:'Ngày 22–28',tasks:[
-      {id:'t115',text:'Load test 5 node 48h liên tục — kiểm tra memory leak, CPU Pi < 30%, Grafana không gap > 5 phút',day:'22-23',cat:'Test'},
-      {id:'t116',text:'FastAPI server: GET /api/nodes /api/telemetry /api/neighbors /api/health — Swagger tại :8000/docs',day:'24-25',cat:'Code'},
-      {id:'t117',text:'Tổng kết tháng 1 — data quality check pandas, đọc 2 paper LSTM+KD, cài TF trên laptop test',day:'26-28',cat:'Doc'},
-    ]},
-  ]},
-  {id:'m2',label:'Tháng 2',color:'#2563EB',bg:'#DBEAFE',textColor:'#1E3A8A',weeks:[
-    {id:'w5',label:'Tuần 5',days:'Ngày 1–7',tasks:[
-      {id:'t201',text:'Học NumPy, Pandas, Matplotlib — thực hành plot RSSI time-series với telemetry.db của mình',day:'1-2',cat:'ML'},
-      {id:'t202',text:'Data Engineering: sliding window ts=20, feature [rssi,snr,channel_occ], train/val/test 60/20/20',day:'3-4',cat:'ML'},
-      {id:'t203',text:'Simulate 5 scenario obstacle (xe/người/cửa/nhiễu/hỏng) — 100 lần mỗi loại, label obstacle_type',day:'5-6',cat:'Data'},
-      {id:'t204',text:'EDA — RSSI distribution, correlation matrix, tìm threshold, phân biệt S4(nhiễu) vs S1(vật cản)',day:'7',cat:'ML'},
-    ]},
-    {id:'w6',label:'Tuần 6',days:'Ngày 8–14',tasks:[
-      {id:'t205',text:'Train Teacher LSTM: Input(20,3)→LSTM(64)→LSTM(32)→Dense(64)→Dense(output,softmax), 100 epochs, EarlyStopping',day:'8-10',cat:'ML'},
-      {id:'t206',text:'Phân tích Teacher output — soft labels với Temperature Scaling T=3, export soft_labels_train.npy',day:'11',cat:'ML'},
-      {id:'t207',text:'Knowledge Distillation: Student FCNN Dense(16)→Dense(8)→Softmax, Loss=α×CE+(1-α)×KL, α=0.3, T=3',day:'12-13',cat:'ML'},
-      {id:'t208',text:'So sánh Student_KD vs Student_vanilla — accuracy/confusion matrix, verify KD tốt hơn ≥5%',day:'14',cat:'ML'},
-    ]},
-    {id:'w7',label:'Tuần 7',days:'Ngày 15–21',tasks:[
-      {id:'t209',text:'Convert Student → TFLite INT8 quantization, xxd → model.h, verify size < 52KB, inference test Pi',day:'15-16',cat:'ML'},
-      {id:'t210',text:'Tích hợp TFLite Micro vào ESP32: tinyml_agent.c, Tensor Arena 16KB, invoke() < 100ms',day:'17-18',cat:'Firmware'},
-      {id:'t211',text:'OTA infrastructure: model_server.py chunks 200B, ota_receiver.c reassemble SPIFFS, CRC32 verify + rollback',day:'19-20',cat:'Code'},
-      {id:'t212',text:'Integration test end-to-end pipeline: train → distill → TFLite → OTA → inference on ESP32',day:'21',cat:'Test'},
-    ]},
-    {id:'w8',label:'Tuần 8',days:'Ngày 22–28',tasks:[
-      {id:'t213',text:'Simulate relay cơ bản — che ăng-ten Node A, Student phát hiện, relay kích hoạt < 2 giây',day:'22-23',cat:'Test'},
-      {id:'t214',text:'Proactive command: Teacher predict 70% nguy cơ → PKT_TYPE_COMMAND → Node B sẵn sàng trước khi A mất',day:'24-25',cat:'Code'},
-      {id:'t215',text:'Thiết kế A/B test plan — Group A: Student KD+Proactive, Group B: random relay, định nghĩa metrics PDR/latency',day:'26-28',cat:'Doc'},
-    ]},
-  ]},
-  {id:'m3',label:'Tháng 3',color:'#7C3AED',bg:'#EDE9FE',textColor:'#3B0764',weeks:[
-    {id:'w9',label:'Tuần 9',days:'Ngày 1–7',tasks:[
-      {id:'t301',text:'A/B Test chính thức 7 ngày: Group A (KD+Proactive) vs Group B (random) — ≥50 obstacle events mỗi group',day:'1-3',cat:'Test'},
-      {id:'t302',text:'Phân tích kết quả A/B — PDR/latency/false-positive, Mann-Whitney U test, biểu đồ p-value < 0.05',day:'4-5',cat:'Data'},
-      {id:'t303',text:'Retrain Teacher data mới (T1+T2+T3), re-distill Student v2, OTA, verify không regression',day:'6-7',cat:'ML'},
-    ]},
-    {id:'w10',label:'Tuần 10',days:'Ngày 8–14',tasks:[
-      {id:'t304',text:'Phân biệt S4(nhiễu) vs S1(vật cản): thêm feature rssi_derivative, retrain Teacher, accuracy ≥75%',day:'8-9',cat:'ML'},
-      {id:'t305',text:'Hysteresis relay logic: cancel chỉ khi RSSI > threshold liên tục 5s, ngăn relay flickering',day:'10-11',cat:'Firmware'},
-      {id:'t306',text:'Stress test 14 ngày: 5 node, random obstacles, Gateway auto-retrain mỗi 7 ngày, PDR ≥95%',day:'12-13',cat:'Test'},
-      {id:'t307',text:'Midpoint review — tổng hợp số liệu, gap analysis, viết draft abstract 250 words cho báo cáo NCKH',day:'14',cat:'Doc'},
-    ]},
-    {id:'w11',label:'Tuần 11',days:'Ngày 15–21',tasks:[
-      {id:'t308',text:'Viết báo cáo NCKH Section 1–3: Introduction, Related Work vs Grunewald et al., System Architecture + draw.io',day:'15-16',cat:'Doc'},
-      {id:'t309',text:'Viết Section 4–5: KD Methodology (loss formula α×CE+(1-α)×KL), Experimental Results bảng + biểu đồ',day:'17-18',cat:'Doc'},
-      {id:'t310',text:'4 Jupyter Notebooks: data_collection, teacher_training, knowledge_distillation, ab_test — chạy clean end-to-end',day:'19-20',cat:'Doc'},
-      {id:'t311',text:'install_gateway.sh one-command setup + README.md + requirements.txt + docker-compose.yml',day:'21',cat:'Code'},
-    ]},
-    {id:'w12',label:'Tuần 12',days:'Ngày 22–28',tasks:[
-      {id:'t312',text:'Viết Section 6: Conclusion — 3 contributions novelty vs paper gốc, limitations, future work, IEEE refs',day:'22-23',cat:'Doc'},
-      {id:'t313',text:'Demo prep: script 10 phút live, 15 slides Powerpoint/Beamer, rehearse 3 lần, backup video recording',day:'24-25',cat:'Doc'},
-      {id:'t314',text:'Git tag v1.0.0, GitHub release notes, archive dataset/models/notebooks lên Zenodo (DOI)',day:'26',cat:'Doc'},
-      {id:'t315',text:'Retrospective cá nhân: KD có thực sự đóng góp, điều gì khó hơn dự kiến, nếu làm lại sẽ thay đổi gì',day:'27-28',cat:'Doc'},
-    ]},
-  ]},
-];
+function uid(){ return '_'+Math.random().toString(36).slice(2,9); }
 
-const MILESTONES = [
-  {id:'ms1',label:'Gateway nhận packet đúng từ 5 node',phase:'m1',week:'w1'},
-  {id:'ms2',label:'Neighbor table hoạt động phân tán trên mỗi node',phase:'m1',week:'w2'},
-  {id:'ms3',label:'Grafana dashboard live update 24/7',phase:'m1',week:'w1'},
-  {id:'ms4',label:'72h uptime không crash',phase:'m1',week:'w4'},
-  {id:'ms5',label:'Dataset ≥25K samples sạch, không NaN',phase:'m2',week:'w6'},
-  {id:'ms6',label:'Teacher LSTM accuracy ≥80% trên test set',phase:'m2',week:'w6'},
-  {id:'ms7',label:'Student TFLite < 52KB inference trên ESP32',phase:'m2',week:'w7'},
-  {id:'ms8',label:'OTA model update end-to-end thành công',phase:'m2',week:'w7'},
-  {id:'ms9',label:'A/B test PDR Group A > Group B ≥20%',phase:'m3',week:'w9'},
-  {id:'ms10',label:'Relay latency < 2 giây từ khi RSSI giảm',phase:'m3',week:'w9'},
-  {id:'ms11',label:'14 ngày uptime PDR ≥95% sustained',phase:'m3',week:'w10'},
-  {id:'ms12',label:'Báo cáo NCKH ≥15 trang + Git v1.0.0',phase:'m3',week:'w12'},
-];
-
-const CAT_COLOR = {
-  OS:'badge-blue', Hardware:'badge-orange', Code:'badge-green',
-  Infra:'badge-blue', Firmware:'badge-orange', Data:'badge-purple',
-  ML:'badge-purple', Test:'badge-gray', Doc:'badge-gray'
-};
-
-let S = {tasks:{}, notes:{}, log:[], tab:'tasks', filter:'all', phase:'m1'};
-
-function load() {
-  try {
-    const raw = localStorage.getItem(STORE_KEY);
-    if (raw) { const d = JSON.parse(raw); if(d.tasks) Object.assign(S, d); }
-  } catch(e) {}
+function defaultData(){
+  return {
+    phases:[
+      {id:'m1',label:'Tháng 1',color:'#16A34A',weeks:[
+        {id:'w1',label:'Tuần 1',days:'Ngày 1–7',tasks:[
+          {id:'t101',text:'Cài Raspberry Pi OS Lite 64-bit, cấu hình headless SSH + WiFi',day:'1',cat:'OS'},
+          {id:'t102',text:'apt update/upgrade, bật SPI/I2C, cài Python pip git tmux htop',day:'2',cat:'OS'},
+          {id:'t103',text:'Wiring SX1276 → Pi 5, cài spidev RPi.GPIO pyLoRa, test REG_VERSION=0x12',day:'3',cat:'Hardware'},
+          {id:'t104',text:'Viết lora_rx_basic.py — decode wire format comm_manager.h, verify CRC-16',day:'4',cat:'Code'},
+          {id:'t105',text:'Cài Docker, InfluxDB 2.x, Grafana — tạo bucket lora_data retention=90d',day:'5-6',cat:'Infra'},
+          {id:'t106',text:'Grafana dashboard: Temperature, Humidity, RSSI realtime, Packet count, Alert rules',day:'7',cat:'Infra'},
+        ]},
+        {id:'w2',label:'Tuần 2',days:'Ngày 8–14',tasks:[
+          {id:'t107',text:'Flash firmware 3× ESP32-S3 N16R8 — NODE_ID 0x03/04/05, stagger TX delay',day:'8-9',cat:'Firmware'},
+          {id:'t108',text:'Implement PKT_TYPE_BEACON (0x05) — beacon_task() FreeRTOS mỗi 10s',day:'10-11',cat:'Code'},
+          {id:'t109',text:'Xây dựng Neighbor Table — lắng nghe beacon, timeout 30s, gửi PKT_TYPE_STATUS',day:'12-13',cat:'Code'},
+          {id:'t110',text:'PKT_TYPE_COMMAND (0x04) downlink — test PREPARE_RELAY / CANCEL_RELAY',day:'14',cat:'Code'},
+        ]},
+        {id:'w3',label:'Tuần 3',days:'Ngày 15–21',tasks:[
+          {id:'t111',text:'Thu thập Telemetry — SQLite telemetry.db, schema: ts/node_id/rssi/snr/freq',day:'15-16',cat:'Data'},
+          {id:'t112',text:'Simulate vật cản động 20 lần, label obstacle=1, thu ≥500 sự kiện',day:'17-18',cat:'Data'},
+          {id:'t113',text:'Systemd service + watchdog + cron backup 3AM + logrotate',day:'19-20',cat:'Infra'},
+          {id:'t114',text:'Review tuần 3 — vẽ sơ đồ kiến trúc, đo baseline PDR, lab notebook',day:'21',cat:'Doc'},
+        ]},
+        {id:'w4',label:'Tuần 4',days:'Ngày 22–28',tasks:[
+          {id:'t115',text:'Load test 5 node 48h — memory leak, CPU Pi < 30%, Grafana không gap > 5 phút',day:'22-23',cat:'Test'},
+          {id:'t116',text:'FastAPI server: /api/nodes /api/telemetry /api/neighbors /api/health + Swagger',day:'24-25',cat:'Code'},
+          {id:'t117',text:'Tổng kết tháng 1 — data quality check, đọc 2 paper LSTM+KD',day:'26-28',cat:'Doc'},
+        ]},
+      ]},
+      {id:'m2',label:'Tháng 2',color:'#2563EB',weeks:[
+        {id:'w5',label:'Tuần 5',days:'Ngày 1–7',tasks:[
+          {id:'t201',text:'Học NumPy, Pandas, Matplotlib — thực hành với telemetry.db',day:'1-2',cat:'ML'},
+          {id:'t202',text:'Data Engineering: sliding window ts=20, feature [rssi,snr,channel], split 60/20/20',day:'3-4',cat:'ML'},
+          {id:'t203',text:'Simulate 5 scenario obstacle (xe/người/cửa/nhiễu/hỏng) — 100 lần mỗi loại',day:'5-6',cat:'Data'},
+          {id:'t204',text:'EDA — RSSI distribution, correlation matrix, phân biệt S4 vs S1',day:'7',cat:'ML'},
+        ]},
+        {id:'w6',label:'Tuần 6',days:'Ngày 8–14',tasks:[
+          {id:'t205',text:'Train Teacher LSTM: Input(20,3)→LSTM(64)→LSTM(32)→Dense(output,softmax), 100 epochs',day:'8-10',cat:'ML'},
+          {id:'t206',text:'Phân tích Teacher output — soft labels, Temperature Scaling T=3',day:'11',cat:'ML'},
+          {id:'t207',text:'Knowledge Distillation: Student FCNN, Loss=α×CE+(1-α)×KL, α=0.3, T=3',day:'12-13',cat:'ML'},
+          {id:'t208',text:'So sánh Student_KD vs Student_vanilla — accuracy/confusion matrix',day:'14',cat:'ML'},
+        ]},
+        {id:'w7',label:'Tuần 7',days:'Ngày 15–21',tasks:[
+          {id:'t209',text:'Convert Student → TFLite INT8, xxd → model.h, verify size < 52KB',day:'15-16',cat:'ML'},
+          {id:'t210',text:'Tích hợp TFLite Micro vào ESP32: tinyml_agent.c, Tensor Arena 16KB, invoke < 100ms',day:'17-18',cat:'Firmware'},
+          {id:'t211',text:'OTA infrastructure: model_server.py chunks 200B, ota_receiver.c, CRC32 + rollback',day:'19-20',cat:'Code'},
+          {id:'t212',text:'Integration test end-to-end: train → distill → TFLite → OTA → inference',day:'21',cat:'Test'},
+        ]},
+        {id:'w8',label:'Tuần 8',days:'Ngày 22–28',tasks:[
+          {id:'t213',text:'Simulate relay cơ bản — che ăng-ten Node A, Student phát hiện, relay < 2 giây',day:'22-23',cat:'Test'},
+          {id:'t214',text:'Proactive command: Teacher predict 70% nguy cơ → COMMAND → Node B sẵn sàng',day:'24-25',cat:'Code'},
+          {id:'t215',text:'Thiết kế A/B test plan — Group A: KD+Proactive, Group B: random, định nghĩa metrics',day:'26-28',cat:'Doc'},
+        ]},
+      ]},
+      {id:'m3',label:'Tháng 3',color:'#7C3AED',weeks:[
+        {id:'w9',label:'Tuần 9',days:'Ngày 1–7',tasks:[
+          {id:'t301',text:'A/B Test 7 ngày: Group A (KD+Proactive) vs Group B (random) — ≥50 obstacle events',day:'1-3',cat:'Test'},
+          {id:'t302',text:'Phân tích kết quả A/B — PDR/latency/false-positive, Mann-Whitney, p-value < 0.05',day:'4-5',cat:'Data'},
+          {id:'t303',text:'Retrain Teacher data mới, re-distill Student v2, OTA, verify không regression',day:'6-7',cat:'ML'},
+        ]},
+        {id:'w10',label:'Tuần 10',days:'Ngày 8–14',tasks:[
+          {id:'t304',text:'Phân biệt S4(nhiễu) vs S1(vật cản): thêm rssi_derivative, retrain, accuracy ≥75%',day:'8-9',cat:'ML'},
+          {id:'t305',text:'Hysteresis relay: cancel khi RSSI > threshold liên tục 5s, ngăn flickering',day:'10-11',cat:'Firmware'},
+          {id:'t306',text:'Stress test 14 ngày: 5 node, random obstacles, auto-retrain 7 ngày, PDR ≥95%',day:'12-13',cat:'Test'},
+          {id:'t307',text:'Midpoint review — tổng hợp số liệu, gap analysis, draft abstract 250 words',day:'14',cat:'Doc'},
+        ]},
+        {id:'w11',label:'Tuần 11',days:'Ngày 15–21',tasks:[
+          {id:'t308',text:'Viết NCKH Section 1–3: Introduction, Related Work, System Architecture + draw.io',day:'15-16',cat:'Doc'},
+          {id:'t309',text:'Viết Section 4–5: KD Methodology (loss formula), Experimental Results',day:'17-18',cat:'Doc'},
+          {id:'t310',text:'4 Jupyter Notebooks: data_collection, teacher_training, kd, ab_test — chạy clean',day:'19-20',cat:'Doc'},
+          {id:'t311',text:'install_gateway.sh one-command + README.md + requirements.txt + docker-compose.yml',day:'21',cat:'Code'},
+        ]},
+        {id:'w12',label:'Tuần 12',days:'Ngày 22–28',tasks:[
+          {id:'t312',text:'Viết Section 6: Conclusion — 3 contributions, limitations, future work, IEEE refs',day:'22-23',cat:'Doc'},
+          {id:'t313',text:'Demo prep: script 10 phút live, 15 slides, rehearse 3 lần, backup video',day:'24-25',cat:'Doc'},
+          {id:'t314',text:'Git tag v1.0.0, GitHub release, archive dataset/models/notebooks, Zenodo DOI',day:'26',cat:'Doc'},
+          {id:'t315',text:'Retrospective: KD có thực sự đóng góp, điều gì khó hơn dự kiến, nếu làm lại',day:'27-28',cat:'Doc'},
+        ]},
+      ]},
+    ],
+    status:{}, notes:{}, log:[]
+  };
 }
 
-function save() {
-  try {
-    localStorage.setItem(STORE_KEY, JSON.stringify({tasks:S.tasks, notes:S.notes, log:S.log}));
-    document.getElementById('last-saved').textContent = 'Lưu lúc ' + new Date().toLocaleTimeString('vi-VN');
-  } catch(e) {}
+let D = defaultData();
+let activeTab = 'tasks';
+let activePhase = 'all';
+let activeFilter = 'all';
+
+function load(){
+  try{
+    const raw = localStorage.getItem(STORE);
+    if(raw){ const d=JSON.parse(raw); if(d.phases){ D=d; } }
+  }catch(e){}
 }
 
-function taskState(id) { return S.tasks[id] || 'todo'; }
+function save(){
+  try{
+    localStorage.setItem(STORE, JSON.stringify(D));
+    const el=document.getElementById('saved-at');
+    if(el) el.textContent='Lưu lúc '+new Date().toLocaleTimeString('vi-VN');
+  }catch(e){}
+}
 
-function cycleTask(id, text, event) {
-  event.stopPropagation();
-  const cur = taskState(id);
-  const next = cur === 'todo' ? 'in-progress' : cur === 'in-progress' ? 'done' : 'todo';
-  S.tasks[id] = next;
-  const label = next === 'done' ? '✓ Hoàn thành' : next === 'in-progress' ? '▶ Đang làm' : '↩ Đặt lại';
-  S.log.unshift({
-    time: new Date().toLocaleString('vi-VN'),
-    action: label,
-    task: text.length > 70 ? text.slice(0, 70) + '…' : text
+function allTasks(){ return D.phases.flatMap(p=>p.weeks.flatMap(w=>w.tasks)); }
+function taskStatus(id){ return D.status[id]||'todo'; }
+
+function cycleStatus(id){
+  const cur=taskStatus(id);
+  const next=cur==='todo'?'in-progress':cur==='in-progress'?'done':'todo';
+  D.status[id]=next;
+  const task=allTasks().find(t=>t.id===id);
+  const label=next==='done'?'✓ Hoàn thành':next==='in-progress'?'▶ Đang làm':'↩ Đặt lại';
+  D.log.unshift({time:new Date().toLocaleString('vi-VN'),action:label,task:(task?.text||'').slice(0,70)});
+  if(D.log.length>300) D.log.pop();
+  save(); renderAll();
+}
+
+// ─── STATS ───────────────────────────────────────────────────
+function renderStats(){
+  const all=allTasks();
+  const done=all.filter(t=>D.status[t.id]==='done').length;
+  const inp=all.filter(t=>D.status[t.id]==='in-progress').length;
+  const pct=all.length?Math.round(done/all.length*100):0;
+  let h=`
+    <div class="stat"><div class="stat-label">Tổng tiến độ</div><div class="stat-value">${pct}%</div><div class="pbar"><div class="pfill" style="width:${pct}%;background:var(--accent)"></div></div></div>
+    <div class="stat"><div class="stat-label">Hoàn thành</div><div class="stat-value" style="color:var(--green)">${done}</div><div class="stat-sub">${inp} đang làm · ${all.length-done-inp} chờ</div></div>`;
+  D.phases.forEach(p=>{
+    const pt=p.weeks.flatMap(w=>w.tasks);
+    const pd=pt.filter(t=>D.status[t.id]==='done').length;
+    const pp=pt.length?Math.round(pd/pt.length*100):0;
+    h+=`<div class="stat"><div class="stat-label">${p.label}</div><div class="stat-value" style="font-size:15px;color:${p.color}">${pd}<span style="font-size:12px;color:var(--text3)">/${pt.length}</span></div><div class="pbar"><div class="pfill" style="width:${pp}%;background:${p.color}"></div></div></div>`;
   });
-  if (S.log.length > 300) S.log.pop();
-  save();
-  renderAll();
+  document.getElementById('stats').innerHTML=h;
 }
 
-function toggleExpand(el) {
-  el.classList.toggle('expanded');
-}
-
-function saveNote(id, val) {
-  S.notes[id] = val;
-  save();
-}
-
-function totals() {
-  const all = PHASES.flatMap(p => p.weeks.flatMap(w => w.tasks));
-  const done = all.filter(t => S.tasks[t.id] === 'done').length;
-  const inp = all.filter(t => S.tasks[t.id] === 'in-progress').length;
-  return {total: all.length, done, inp, todo: all.length - done - inp};
-}
-
-function phaseCount(pid) {
-  const p = PHASES.find(x => x.id === pid);
-  if (!p) return {done:0, total:0};
-  const all = p.weeks.flatMap(w => w.tasks);
-  return {done: all.filter(t => S.tasks[t.id] === 'done').length, total: all.length};
-}
-
-function renderStats() {
-  const {total, done, inp} = totals();
-  const pct = total ? Math.round(done / total * 100) : 0;
-  let html = `
-    <div class="stat">
-      <div class="stat-label">Tổng tiến độ</div>
-      <div class="stat-value">${pct}%</div>
-      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:var(--accent)"></div></div>
-    </div>
-    <div class="stat">
-      <div class="stat-label">Hoàn thành</div>
-      <div class="stat-value" style="color:var(--green)">${done}</div>
-      <div class="stat-sub">${inp} đang làm · ${total - done - inp} chờ</div>
-    </div>`;
-  PHASES.forEach(p => {
-    const c = phaseCount(p.id);
-    const pp = c.total ? Math.round(c.done / c.total * 100) : 0;
-    html += `<div class="stat">
-      <div class="stat-label">${p.label}</div>
-      <div class="stat-value" style="font-size:16px;color:${p.color}">${c.done}<span style="font-size:13px;color:var(--text-tertiary)">/${c.total}</span></div>
-      <div class="progress-bar"><div class="progress-fill" style="width:${pp}%;background:${p.color}"></div></div>
-    </div>`;
+// ─── TASKS TAB ───────────────────────────────────────────────
+function renderTasks(){
+  const c=document.getElementById('content');
+  let h=`<div class="filter-row">
+    <button class="fbtn phase${activePhase==='all'?' active':''}" onclick="setPhase('all')">Tất cả phase</button>`;
+  D.phases.forEach(p=>{
+    const act=activePhase===p.id;
+    h+=`<button class="fbtn phase${act?' active':''}" style="${act?`background:${p.color};color:#fff;border-color:${p.color}`:''}" onclick="setPhase('${p.id}')">${p.label}</button>`;
   });
-  document.getElementById('stats-row').innerHTML = html;
-}
-
-function renderTasks() {
-  const phase = PHASES.find(p => p.id === S.phase);
-  let html = `<div class="filter-row">`;
-  PHASES.forEach(p => {
-    const active = S.phase === p.id;
-    html += `<button class="filter-btn phase-btn${active ? ' active' : ''}"
-      style="${active ? `background:${p.color};color:#fff;border-color:${p.color}` : ''}"
-      onclick="selectPhase('${p.id}')">${p.label}</button>`;
+  h+=`<span class="spacer"></span>`;
+  [['all','Tất cả'],['todo','Chưa làm'],['in-progress','Đang làm'],['done','Xong']].forEach(([f,l])=>{
+    h+=`<button class="fbtn${activeFilter===f?' active':''}" onclick="setFilter('${f}')">${l}</button>`;
   });
-  html += `<span class="spacer"></span>`;
-  [['all','Tất cả'],['todo','Chưa làm'],['in-progress','Đang làm'],['done','Xong']].forEach(([f,l]) => {
-    html += `<button class="filter-btn${S.filter === f ? ' active' : ''}" onclick="setFilter('${f}')">${l}</button>`;
-  });
-  html += `</div>`;
+  h+=`</div>`;
 
-  phase.weeks.forEach(week => {
-    const filtered = week.tasks.filter(t => {
-      const ts = taskState(t.id);
-      return S.filter === 'all' || ts === S.filter || (S.filter === 'todo' && !S.tasks[t.id]);
-    });
-    if (!filtered.length) return;
+  const phases = activePhase==='all' ? D.phases : D.phases.filter(p=>p.id===activePhase);
 
-    const done = week.tasks.filter(t => S.tasks[t.id] === 'done').length;
-    const pct = Math.round(done / week.tasks.length * 100);
-
-    html += `<div class="week-section">
-      <div class="week-header" style="background:${phase.bg}">
-        <span class="week-title" style="color:${phase.textColor}">${week.label}
-          <span style="font-weight:400;color:${phase.color};margin-left:6px">${week.days}</span>
-        </span>
-        <span class="week-meta" style="color:${phase.color}">${done}/${week.tasks.length} · ${pct}%</span>
-      </div>
-      <div class="task-list">`;
-
-    filtered.forEach(t => {
-      const ts = taskState(t.id);
-      const note = S.notes[t.id] || '';
-      const checkClass = ts === 'done' ? ' checked' : ts === 'in-progress' ? ' in-prog' : '';
-      const taskClass = ts === 'done' ? ' done' : ts === 'in-progress' ? ' in-progress' : '';
-      const checkIcon = ts === 'done' ? '<i class="ti ti-check" style="font-size:11px"></i>' : ts === 'in-progress' ? '<i class="ti ti-player-play" style="font-size:10px"></i>' : '';
-
-      html += `<div class="task${taskClass}" onclick="toggleExpand(this)">
-        <div class="check${checkClass}" onclick="cycleTask('${t.id}',\`${t.text.replace(/`/g,"'").replace(/\n/g,' ')}\`,event)">${checkIcon}</div>
-        <div class="task-body">
-          <div class="task-text">${t.text}</div>
-          <div class="task-meta">
-            <span class="badge ${CAT_COLOR[t.cat] || 'badge-gray'}">${t.cat}</span>
-            <span class="day-info"><i class="ti ti-calendar" style="font-size:11px"></i> Ngày ${t.day}</span>
-            ${note ? `<span class="day-info" style="color:var(--info-text)"><i class="ti ti-note" style="font-size:11px"></i> ghi chú</span>` : ''}
-          </div>
-          <textarea class="note-area" placeholder="Ghi chú: bug gặp phải, lệnh hay dùng, kết quả đo được..."
-            onclick="event.stopPropagation()"
-            oninput="saveNote('${t.id}',this.value)">${note}</textarea>
+  phases.forEach(phase=>{
+    h+=`<div class="phase-editor">
+      <div class="phase-header" style="background:${phase.color}20">
+        <input class="phase-title-input" style="color:${phase.color}" value="${esc(phase.label)}"
+          onchange="editPhaseLabel('${phase.id}',this.value)" title="Click để sửa tên phase">
+        <div class="phase-actions">
+          <button class="btn sm" style="color:${phase.color};border-color:${phase.color}" onclick="showPhaseModal('${phase.id}')"><i class="ti ti-palette" style="font-size:11px"></i> Màu</button>
+          <button class="btn sm danger" onclick="deletePhase('${phase.id}')"><i class="ti ti-trash" style="font-size:11px"></i></button>
+          <button class="btn sm primary" onclick="addPhase('after','${phase.id}')"><i class="ti ti-plus" style="font-size:11px"></i> Phase</button>
         </div>
-        <i class="ti ti-chevron-down chevron"></i>
+      </div>`;
+
+    phase.weeks.forEach(week=>{
+      const filtered=week.tasks.filter(t=>{
+        const ts=taskStatus(t.id);
+        return activeFilter==='all'||ts===activeFilter||(activeFilter==='todo'&&!D.status[t.id]);
+      });
+      const wdone=week.tasks.filter(t=>D.status[t.id]==='done').length;
+      const wpct=week.tasks.length?Math.round(wdone/week.tasks.length*100):0;
+
+      h+=`<div class="week-wrap">
+        <div class="week-header">
+          <div class="week-header-left">
+            <input class="week-label-input" style="color:${phase.color}" value="${esc(week.label)}"
+              onchange="editWeekLabel('${phase.id}','${week.id}',this.value)" title="Sửa tên tuần">
+            <input class="week-days-input" value="${esc(week.days)}"
+              onchange="editWeekDays('${phase.id}','${week.id}',this.value)" title="Sửa ngày">
+            <span class="week-prog" style="color:${phase.color}">${wdone}/${week.tasks.length} · ${wpct}%</span>
+          </div>
+          <div class="week-actions">
+            <button class="btn sm" onclick="addWeek('${phase.id}','${week.id}')"><i class="ti ti-plus" style="font-size:11px"></i> Tuần</button>
+            <button class="btn sm danger" onclick="deleteWeek('${phase.id}','${week.id}')"><i class="ti ti-trash" style="font-size:11px"></i></button>
+          </div>
+        </div>
+        <div class="task-list" id="tl_${week.id}">`;
+
+      if(!filtered.length && activeFilter!=='all'){
+        h+=`<div style="font-size:12px;color:var(--text3);padding:.3rem 0">Không có task nào phù hợp bộ lọc</div>`;
+      }
+
+      filtered.forEach(t=>{
+        const ts=taskStatus(t.id);
+        const chkCls=ts==='done'?' checked':ts==='in-progress'?' inp':'';
+        const chkIcon=ts==='done'?'<i class="ti ti-check" style="font-size:10px"></i>':ts==='in-progress'?'<i class="ti ti-player-play" style="font-size:10px"></i>':'';
+        const taskCls=ts==='done'?' done':ts==='in-progress'?' inprog':'';
+        const note=D.notes[t.id]||'';
+        const catCls=CAT_CLS[t.cat]||'badge-gray';
+        h+=`<div class="task${taskCls}" id="task_${t.id}">
+          <div class="check${chkCls}" onclick="cycleStatus('${t.id}')" title="Đổi trạng thái">${chkIcon}</div>
+          <div class="task-body">
+            <textarea class="task-text-input" rows="1" title="Double-click để sửa"
+              onchange="editTaskText('${phase.id}','${week.id}','${t.id}',this.value)"
+              oninput="autoResize(this)">${esc(t.text)}</textarea>
+            <div class="task-meta">
+              <select class="cat-select" onchange="editTaskCat('${phase.id}','${week.id}','${t.id}',this.value)" title="Đổi loại">
+                ${CAT_OPTS.map(c=>`<option${c===t.cat?' selected':''}>${c}</option>`).join('')}
+              </select>
+              <input class="day-input" value="${esc(t.day)}" placeholder="Ngày..."
+                onchange="editTaskDay('${phase.id}','${week.id}','${t.id}',this.value)" title="Sửa ngày">
+              ${note?`<span style="font-size:11px;color:var(--info-text)"><i class="ti ti-note" style="font-size:10px"></i> ghi chú</span>`:''}
+            </div>
+            <textarea class="note-area" placeholder="Ghi chú: bug, lệnh, kết quả..."
+              onclick="event.stopPropagation()"
+              oninput="saveNote('${t.id}',this.value)">${esc(note)}</textarea>
+          </div>
+          <div class="task-actions">
+            <button class="btn sm" onclick="toggleNote(event,'task_${t.id}')" title="Ghi chú"><i class="ti ti-note" style="font-size:11px"></i></button>
+            <button class="btn sm danger" onclick="deleteTask('${phase.id}','${week.id}','${t.id}')" title="Xóa"><i class="ti ti-trash" style="font-size:11px"></i></button>
+          </div>
+        </div>`;
+      });
+
+      h+=`</div>
+        <button class="add-task-btn" onclick="addTask('${phase.id}','${week.id}')">
+          <i class="ti ti-plus" style="font-size:12px"></i> Thêm task
+        </button>
       </div>`;
     });
 
-    html += `</div></div>`;
+    h+=`<button class="add-week-btn" onclick="addWeekToPhase('${phase.id}')">
+      <i class="ti ti-plus" style="font-size:12px"></i> Thêm tuần vào ${phase.label}
+    </button></div>`;
   });
 
-  document.getElementById('main-content').innerHTML = html;
+  h+=`<button class="add-phase-btn" onclick="addPhase('new')">
+    <i class="ti ti-plus" style="font-size:14px"></i> Thêm phase mới
+  </button>`;
+
+  c.innerHTML=h;
+  c.querySelectorAll('textarea.task-text-input').forEach(autoResize);
 }
 
-function renderMilestones() {
-  let html = '';
-  PHASES.forEach(phase => {
-    const ms = MILESTONES.filter(m => m.phase === phase.id);
-    html += `<div class="phase-group">
-      <span class="phase-label" style="background:${phase.bg};color:${phase.color}">${phase.label}</span>`;
-    ms.forEach(m => {
-      const pObj = PHASES.find(p => p.id === m.phase);
-      const wObj = pObj?.weeks.find(w => w.id === m.week);
-      const tasks = wObj?.tasks || [];
-      const achieved = tasks.length > 0 && tasks.every(t => S.tasks[t.id] === 'done');
-      html += `<div class="milestone${achieved ? ' achieved' : ''}">
-        <div class="milestone-dot" style="background:${achieved ? phase.color : 'var(--border-md)'}"></div>
-        <span class="milestone-label">${m.label}</span>
-        ${achieved
-          ? `<span class="badge badge-green"><i class="ti ti-check" style="font-size:10px"></i> đạt</span>`
-          : `<span style="font-size:11px;color:var(--text-tertiary)">${m.week.replace('w','Tuần ')}</span>`}
+// ─── MILESTONES TAB ──────────────────────────────────────────
+function renderMilestones(){
+  let h='';
+  D.phases.forEach(phase=>{
+    h+=`<div style="margin-bottom:1.25rem">
+      <div style="font-size:12px;font-weight:500;color:${phase.color};padding:.35rem .8rem;background:${phase.color}18;border-radius:var(--radius);margin-bottom:.5rem;display:inline-block">${phase.label}</div>`;
+    phase.weeks.forEach(week=>{
+      const done=week.tasks.length>0&&week.tasks.every(t=>D.status[t.id]==='done');
+      h+=`<div class="ms-item">
+        <div class="ms-dot" style="background:${done?phase.color:'var(--border2)'}"></div>
+        <span class="ms-label${done?' achieved':''}">${week.label} — ${week.days}</span>
+        <span style="font-size:11px;color:var(--text3)">${week.tasks.filter(t=>D.status[t.id]==='done').length}/${week.tasks.length} task</span>
+        ${done?`<span class="badge" style="background:var(--success-bg);color:var(--success-text)"><i class="ti ti-check" style="font-size:10px"></i> xong</span>`:''}
       </div>`;
     });
-    html += `</div>`;
+    h+=`</div>`;
   });
-  document.getElementById('main-content').innerHTML = html;
+  document.getElementById('content').innerHTML=h;
 }
 
-function renderLog() {
-  if (!S.log.length) {
-    document.getElementById('main-content').innerHTML = `<div class="empty-state">
-      <i class="ti ti-history"></i>
-      Chưa có hoạt động nào.<br>Bắt đầu click vào task để ghi nhật ký tự động.
-    </div>`;
+// ─── LOG TAB ─────────────────────────────────────────────────
+function renderLog(){
+  if(!D.log.length){
+    document.getElementById('content').innerHTML=`<div class="empty"><i class="ti ti-history"></i>Chưa có hoạt động nào.<br>Bắt đầu click task để ghi nhật ký.</div>`;
     return;
   }
-  let html = `<div style="display:flex;justify-content:flex-end;margin-bottom:.75rem">
-    <button class="btn" onclick="clearLog()"><i class="ti ti-trash" style="font-size:13px"></i> Xóa log</button>
+  let h=`<div style="display:flex;justify-content:flex-end;margin-bottom:.75rem">
+    <button class="btn danger" onclick="clearLog()"><i class="ti ti-trash" style="font-size:12px"></i> Xóa log</button>
   </div>`;
-  S.log.slice(0, 100).forEach(e => {
-    html += `<div class="log-entry">
-      <div class="log-time">${e.time}</div>
-      <div class="log-text">${e.action} — ${e.task}</div>
-    </div>`;
+  D.log.slice(0,100).forEach(e=>{
+    h+=`<div class="log-item"><div class="log-time">${e.time}</div><div class="log-text">${e.action} — ${e.task}</div></div>`;
   });
-  document.getElementById('main-content').innerHTML = html;
+  document.getElementById('content').innerHTML=h;
 }
 
-function renderAll() {
-  renderStats();
-  if (S.tab === 'tasks') renderTasks();
-  else if (S.tab === 'milestones') renderMilestones();
-  else renderLog();
+// ─── IO TAB ──────────────────────────────────────────────────
+function renderIO(){
+  document.getElementById('content').innerHTML=`
+    <div style="max-width:480px">
+      <p style="font-size:13px;color:var(--text2);margin-bottom:1.25rem">Xuất toàn bộ dữ liệu ra JSON để backup hoặc chia sẻ. Nhập JSON để khôi phục hoặc dùng trên thiết bị khác.</p>
+      <div style="display:flex;flex-direction:column;gap:.75rem">
+        <button class="btn primary" onclick="exportJSON()" style="justify-content:center;padding:.65rem">
+          <i class="ti ti-download" style="font-size:14px"></i> Xuất JSON (backup toàn bộ)
+        </button>
+        <button class="btn" onclick="importJSON()" style="justify-content:center;padding:.65rem">
+          <i class="ti ti-upload" style="font-size:14px"></i> Nhập JSON (khôi phục)
+        </button>
+        <button class="btn" onclick="exportTXT()" style="justify-content:center;padding:.65rem">
+          <i class="ti ti-file-text" style="font-size:14px"></i> Xuất TXT (báo cáo tiến độ)
+        </button>
+      </div>
+      <div style="margin-top:1.5rem;padding:1rem;background:var(--bg2);border-radius:var(--radius);font-size:12px;color:var(--text2)">
+        <div style="font-weight:500;color:var(--text);margin-bottom:.5rem">Hướng dẫn dùng trên nhiều thiết bị</div>
+        <div>1. Máy A: Xuất JSON → lưu file</div>
+        <div>2. Máy B: Nhập JSON → chọn file vừa lưu</div>
+        <div>3. Dữ liệu đồng bộ ngay lập tức</div>
+      </div>
+      <div style="margin-top:1rem;padding:1rem;background:var(--danger-bg);border-radius:var(--radius);font-size:12px;color:var(--danger-text)">
+        <div style="font-weight:500;margin-bottom:.3rem"><i class="ti ti-alert-triangle" style="font-size:12px"></i> Lưu ý khi Reset</div>
+        Nút Reset sẽ xóa toàn bộ tiến độ và khôi phục roadmap mặc định. Hãy xuất JSON backup trước.
+      </div>
+    </div>`;
 }
 
-function switchTab(tab, el) {
-  S.tab = tab;
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  renderAll();
+// ─── EDIT FUNCTIONS ──────────────────────────────────────────
+function editPhaseLabel(pid, val){
+  const p=D.phases.find(x=>x.id===pid); if(p){ p.label=val; save(); renderStats(); }
+}
+function editWeekLabel(pid,wid,val){
+  const p=D.phases.find(x=>x.id===pid); const w=p?.weeks.find(x=>x.id===wid); if(w){ w.label=val; save(); }
+}
+function editWeekDays(pid,wid,val){
+  const p=D.phases.find(x=>x.id===pid); const w=p?.weeks.find(x=>x.id===wid); if(w){ w.days=val; save(); }
+}
+function editTaskText(pid,wid,tid,val){
+  const p=D.phases.find(x=>x.id===pid); const w=p?.weeks.find(x=>x.id===wid); const t=w?.tasks.find(x=>x.id===tid);
+  if(t){ t.text=val; save(); }
+}
+function editTaskCat(pid,wid,tid,val){
+  const p=D.phases.find(x=>x.id===pid); const w=p?.weeks.find(x=>x.id===wid); const t=w?.tasks.find(x=>x.id===tid);
+  if(t){ t.cat=val; save(); renderTasks(); }
+}
+function editTaskDay(pid,wid,tid,val){
+  const p=D.phases.find(x=>x.id===pid); const w=p?.weeks.find(x=>x.id===wid); const t=w?.tasks.find(x=>x.id===tid);
+  if(t){ t.day=val; save(); }
+}
+function saveNote(tid,val){ D.notes[tid]=val; save(); }
+function toggleNote(e,taskId){ e.stopPropagation(); document.getElementById(taskId)?.classList.toggle('expanded'); }
+
+// ─── ADD / DELETE ─────────────────────────────────────────────
+function addTask(pid,wid){
+  const p=D.phases.find(x=>x.id===pid); const w=p?.weeks.find(x=>x.id===wid);
+  if(w){ w.tasks.push({id:uid(),text:'Task mới — click để sửa',day:'?',cat:'Code'}); save(); renderAll(); }
+}
+function deleteTask(pid,wid,tid){
+  const p=D.phases.find(x=>x.id===pid); const w=p?.weeks.find(x=>x.id===wid);
+  if(w){ w.tasks=w.tasks.filter(t=>t.id!==tid); delete D.status[tid]; delete D.notes[tid]; save(); renderAll(); }
+}
+function addWeek(pid,afterWid){
+  const p=D.phases.find(x=>x.id===pid); if(!p) return;
+  const nw={id:uid(),label:'Tuần mới',days:'Ngày ?',tasks:[]};
+  const idx=p.weeks.findIndex(w=>w.id===afterWid);
+  p.weeks.splice(idx+1,0,nw); save(); renderAll();
+}
+function addWeekToPhase(pid){
+  const p=D.phases.find(x=>x.id===pid); if(!p) return;
+  p.weeks.push({id:uid(),label:'Tuần mới',days:'Ngày ?',tasks:[]}); save(); renderAll();
+}
+function deleteWeek(pid,wid){
+  if(!confirm('Xóa tuần này và tất cả task bên trong?')) return;
+  const p=D.phases.find(x=>x.id===pid); if(!p) return;
+  const w=p.weeks.find(x=>x.id===wid);
+  if(w) w.tasks.forEach(t=>{ delete D.status[t.id]; delete D.notes[t.id]; });
+  p.weeks=p.weeks.filter(w=>w.id!==wid); save(); renderAll();
+}
+function addPhase(mode, afterId){
+  const np={id:uid(),label:'Phase mới',color:'#0891B2',weeks:[{id:uid(),label:'Tuần 1',days:'Ngày 1–7',tasks:[]}]};
+  if(mode==='after'&&afterId){ const idx=D.phases.findIndex(p=>p.id===afterId); D.phases.splice(idx+1,0,np); }
+  else D.phases.push(np);
+  save(); renderAll(); showPhaseModal(np.id);
+}
+function deletePhase(pid){
+  if(!confirm('Xóa phase này và toàn bộ dữ liệu bên trong?')) return;
+  const p=D.phases.find(x=>x.id===pid);
+  if(p) p.weeks.forEach(w=>w.tasks.forEach(t=>{ delete D.status[t.id]; delete D.notes[t.id]; }));
+  D.phases=D.phases.filter(p=>p.id!==pid);
+  if(activePhase===pid) activePhase='all';
+  save(); renderAll();
 }
 
-function selectPhase(id) { S.phase = id; renderTasks(); }
-function setFilter(f) { S.filter = f; renderTasks(); }
-
-function clearLog() {
-  if (confirm('Xóa toàn bộ nhật ký?')) { S.log = []; save(); renderLog(); }
+// ─── PHASE COLOR MODAL ───────────────────────────────────────
+function showPhaseModal(pid){
+  const p=D.phases.find(x=>x.id===pid); if(!p) return;
+  document.getElementById('modal-body').innerHTML=`
+    <h3><i class="ti ti-palette" style="font-size:14px;margin-right:5px"></i>Chỉnh phase: ${p.label}</h3>
+    <label>Tên phase</label>
+    <input id="pm-label" value="${esc(p.label)}">
+    <label>Màu sắc</label>
+    <div class="color-row" id="pm-colors">
+      ${COLORS.map(c=>`<div class="color-swatch${c===p.color?' selected':''}" style="background:${c}" onclick="selectColor(this,'${c}')" title="${c}"></div>`).join('')}
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal()">Hủy</button>
+      <button class="btn primary" onclick="applyPhaseEdit('${pid}')">Lưu</button>
+    </div>`;
+  document.getElementById('modal').style.display='flex';
 }
-
-function resetConfirm() {
-  if (confirm('Reset toàn bộ tiến độ? Hành động này không thể hoàn tác.')) {
-    S.tasks = {}; S.notes = {}; S.log = [];
-    save(); renderAll();
-  }
+function selectColor(el,c){
+  document.querySelectorAll('.color-swatch').forEach(s=>s.classList.remove('selected'));
+  el.classList.add('selected'); el.dataset.color=c;
 }
-
-function goToday() {
-  const start = new Date('2026-05-12');
-  const days = Math.max(0, Math.floor((Date.now() - start) / 86400000));
-  const phaseIdx = days < 28 ? 0 : days < 56 ? 1 : 2;
-  S.phase = PHASES[Math.min(phaseIdx, 2)].id;
-  S.tab = 'tasks';
-  S.filter = 'all';
-  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === 0));
-  renderAll();
+function applyPhaseEdit(pid){
+  const p=D.phases.find(x=>x.id===pid); if(!p) return;
+  p.label=document.getElementById('pm-label').value;
+  const sel=document.querySelector('.color-swatch.selected');
+  if(sel) p.color=sel.style.background||sel.dataset.color||p.color;
+  closeModal(); save(); renderAll();
 }
+function closeModal(){ document.getElementById('modal').style.display='none'; }
 
-function exportLog() {
-  const lines = [
-    'LoRa IoT Project — Báo cáo tiến độ',
-    '='.repeat(50),
-    `Xuất lúc: ${new Date().toLocaleString('vi-VN')}`,
-    '',
-    '== TIẾN ĐỘ CÔNG VIỆC ==',
-    ''
-  ];
-  PHASES.forEach(phase => {
-    lines.push(`[${phase.label}]`);
-    phase.weeks.forEach(week => {
-      lines.push(`  ${week.label} — ${week.days}`);
-      week.tasks.forEach(t => {
-        const ts = S.tasks[t.id] || 'todo';
-        const mark = ts === 'done' ? '[X]' : ts === 'in-progress' ? '[>]' : '[ ]';
-        lines.push(`    ${mark} [Ngày ${t.day}] [${t.cat}] ${t.text.replace(/\n/g,' ')}`);
-        if (S.notes[t.id]) lines.push(`        Ghi chú: ${S.notes[t.id]}`);
+// ─── IMPORT / EXPORT ─────────────────────────────────────────
+function exportJSON(){
+  const blob=new Blob([JSON.stringify(D,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=`lora_tracker_${new Date().toISOString().slice(0,10)}.json`; a.click();
+}
+function importJSON(){ document.getElementById('file-input').click(); }
+function handleImport(e){
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    try{
+      const d=JSON.parse(ev.target.result);
+      if(!d.phases) throw new Error('Invalid format');
+      if(!confirm('Nhập JSON sẽ ghi đè dữ liệu hiện tại. Tiếp tục?')) return;
+      D=d; save(); renderAll(); alert('Nhập thành công!');
+    }catch(err){ alert('File JSON không hợp lệ: '+err.message); }
+  };
+  r.readAsText(f); e.target.value='';
+}
+function exportTXT(){
+  const lines=['LoRa IoT Project — Báo cáo tiến độ','='.repeat(50),`Xuất lúc: ${new Date().toLocaleString('vi-VN')}`,''];
+  D.phases.forEach(ph=>{
+    lines.push(`[${ph.label}]`);
+    ph.weeks.forEach(wk=>{
+      lines.push(`  ${wk.label} — ${wk.days}`);
+      wk.tasks.forEach(t=>{
+        const ts=D.status[t.id]||'todo';
+        lines.push(`    [${ts==='done'?'X':ts==='in-progress'?'>':' '}] [${t.cat}] ${t.text.replace(/\n/g,' ')}`);
+        if(D.notes[t.id]) lines.push(`        Ghi chú: ${D.notes[t.id]}`);
       });
     });
     lines.push('');
   });
-
-  const {total, done, inp} = totals();
-  lines.push('== THỐNG KÊ ==');
-  lines.push(`Tổng: ${total} task`);
-  lines.push(`Hoàn thành: ${done} (${Math.round(done/total*100)}%)`);
-  lines.push(`Đang làm: ${inp}`);
-  lines.push(`Chưa làm: ${total - done - inp}`);
-  lines.push('');
-
-  if (S.log.length) {
-    lines.push('== NHẬT KÝ HOẠT ĐỘNG ==');
-    S.log.forEach(e => lines.push(`${e.time} | ${e.action} | ${e.task}`));
-  }
-
-  const blob = new Blob([lines.join('\n')], {type: 'text/plain;charset=utf-8'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `lora_tracker_${new Date().toISOString().slice(0,10)}.txt`;
-  a.click();
+  const all=allTasks();
+  const done=all.filter(t=>D.status[t.id]==='done').length;
+  lines.push('── Thống kê ──',`Tổng: ${all.length} task`,`Hoàn thành: ${done} (${all.length?Math.round(done/all.length*100):0}%)`,`Đang làm: ${all.filter(t=>D.status[t.id]==='in-progress').length}`,'');
+  if(D.log.length){ lines.push('── Nhật ký ──'); D.log.forEach(e=>lines.push(`${e.time} | ${e.action} | ${e.task}`)); }
+  const blob=new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=`lora_progress_${new Date().toISOString().slice(0,10)}.txt`; a.click();
 }
 
-load();
-renderAll();
+// ─── HELPERS ─────────────────────────────────────────────────
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function autoResize(el){ el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
+function clearLog(){ if(confirm('Xóa toàn bộ nhật ký?')){ D.log=[]; save(); renderLog(); } }
+function resetAll(){
+  if(confirm('Reset toàn bộ? Hành động này không thể hoàn tác.\n\nHãy xuất JSON backup trước nếu cần.')){
+    D=defaultData(); save(); renderAll();
+  }
+}
+function switchTab(tab,el){
+  activeTab=tab;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderAll();
+}
+function setPhase(id){ activePhase=id; renderTasks(); }
+function setFilter(f){ activeFilter=f; renderTasks(); }
+
+function renderAll(){
+  renderStats();
+  if(activeTab==='tasks') renderTasks();
+  else if(activeTab==='milestones') renderMilestones();
+  else if(activeTab==='log') renderLog();
+  else renderIO();
+}
+
+load(); renderAll();
 </script>
 </body>
 </html>
